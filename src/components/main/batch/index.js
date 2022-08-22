@@ -3,19 +3,34 @@ import { useHistory } from "react-router-dom";
 import * as apiaxios from "../../../api/service";
 import "./style.css";
 import Swal from "sweetalert2";
+import * as constTable from "../../../constant/constTable";
+import moment from 'moment';
+
 export default function Batch(props) {
   let history = useHistory();
   const [idTemp, setIdTemp] = useState();
   const [posts, setPosts] = useState([]);
+  const [dateStart, setDateStart] = useState('');
+  const [dateEnd, setDateEnd] = useState('');
+  const [isEqualBatch, setIsEqualBatch] = useState(true);
+  const [messageErr, setMessageErr] = useState('');
+
   useEffect(() => {
     apiaxios.batchAPI("internshipcourse").then((res) => {
       setPosts(res.data.data);
     });
+
+    // select Date present
+    let getDate = new Date()
+    let datePresent = moment().format('YYYY-MM-DD')
+    let dateEnd = getDate.getFullYear() + '-' + ('0' + (getDate.getMonth() + 3)).slice(-2) + '-' + getDate.getDate()
+    setDateStart(datePresent)
+    setDateEnd(dateEnd)
   }, []);
   const [addFormData, setAddFormData] = useState({
     nameCoure: "",
     dateStart: "",
-    dataEnd: "",
+    dateEnd: "",
     status: "",
     kindOfInternship: "",
   });
@@ -27,6 +42,21 @@ export default function Batch(props) {
     newFormData[fieldName] = fieldValue;
     setAddFormData(newFormData);
   };
+
+  const newDateStart = addFormData.dateStart
+
+  useEffect(() => {
+    setIsEqualBatch(false)
+    setMessageErr("")
+    posts.filter((item) => {
+      let getDateStartFormat = moment(item.dateStart).format('YYYY-MM-DD')
+      if (getDateStartFormat === newDateStart) {
+        setIsEqualBatch(true)
+        setMessageErr("#messageErr")
+      }
+    })
+  }, [newDateStart])
+
   const handleAddFormSubmit = (event) => {
     event.preventDefault();
     const newContact = {
@@ -36,54 +66,62 @@ export default function Batch(props) {
       status: addFormData.status,
       kindOfInternship: addFormData.kindOfInternship,
     };
-    apiaxios.batchCreate("internshipcourse/create", newContact).then((res) => {
-      if(res){
-        history.push(`/Home/batch/?id=${res.data.idInternshipCourse}`);
-      }
-    }).catch((error) => {
-      if (error.response) {
-        Swal.fire({
-          icon: 'error',
-          text: error.response.data.error,
-          confirmButtonText: "Xác nhận",
-        })
-      } else if (error.request) {
-        Swal.fire({
-          icon: 'error',
-          text: error.request,
-          confirmButtonText: "Xác nhận",
-        })
-      } else {
-        console.log('Error', error.message);
-        Swal.fire({
-          icon: 'error',
-          text: error.message,
-          confirmButtonText: "Xác nhận",
-        })
-      }
-    });
+
+    // equal to dateStart
+    if (isEqualBatch === false) {
+      apiaxios.batchCreate("internshipcourse/create", newContact).then((res) => {
+        if (res) {
+          history.push(`/Home/batch/?id=${res.data.idInternshipCourse}`);
+        }
+      }).catch((error) => {
+        if (error.response) {
+          Swal.fire({
+            icon: 'error',
+            text: error.response.data.error,
+            confirmButtonText: "Xác nhận",
+          })
+        } else if (error.request) {
+          Swal.fire({
+            icon: 'error',
+            text: error.request,
+            confirmButtonText: "Xác nhận",
+          })
+        } else {
+          console.log('Error', error.message);
+          Swal.fire({
+            icon: 'error',
+            text: error.message,
+            confirmButtonText: "Xác nhận",
+          })
+        }
+      });
+    }
+
   };
   const handleSubmit = () => {
     try {
-      if(idTemp !== undefined) {
+      if (idTemp !== undefined) {
         history.push(`/Home/batch/?id=${idTemp}`);
-      }else{ Swal.fire({
-        icon: 'error',
-        text: 'Bạn cần chọn Batch !',
-        confirmButtonText: "Xác nhận",
-      })}
-    } catch (error) {
+      } else {
         Swal.fire({
           icon: 'error',
-          text: error.response.status.error,
+          text: 'Bạn cần chọn Batch !',
+          confirmButtonText: "Xác nhận",
         })
-    } 
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        text: error.response.status.error,
+      })
+    }
   };
+
   return (
     <div>
       <div
         id="load"
-        style={{display:"block"}}
+        style={{ display: "block" }}
         className="modal"
         tabIndex={-1}
         role="dialog"
@@ -96,7 +134,7 @@ export default function Batch(props) {
             <div className="modal-body">
               <label className="label-batch">Chọn khóa thực tập : </label>
               <select
-                className="select-batch"      
+                className="select-batch"
                 onChange={(e) => setIdTemp(e.currentTarget.value)}
               >
                 <option disabled selected hidden>Chọn...</option>
@@ -117,18 +155,18 @@ export default function Batch(props) {
                 className="btn btn-primary btn-Batch"
                 data-toggle="modal"
                 data-target="#exampleModalCenter"
-                style={{marginLeft:"20px"}}
+                style={{ marginLeft: "20px" }}
               >
                 Thêm
               </button>
               <button
                 onClick={handleSubmit}
-                
+
                 id="md-sumit"
                 type="submit"
                 className="btn btn-primary btn-Batch"
-                style={{marginLeft:"30px"}}
-               
+                style={{ marginLeft: "30px" }}
+
               >
                 Xác nhận
               </button>
@@ -179,7 +217,7 @@ export default function Batch(props) {
                           className="inputText"
                           type="text"
                           name="nameCoure"
-                          
+
                           placeholder="VD: Batch 1"
                           onChange={handleAddFormChange}
                         />
@@ -208,9 +246,10 @@ export default function Batch(props) {
                       <td>
                         <input
                           className="inputDay"
-                          style={{width:"200px"}}
+                          style={{ width: "200px" }}
                           type="date"
                           name="dateStart"
+                          min={dateStart}
                           onChange={handleAddFormChange}
                         ></input>
                       </td>
@@ -237,16 +276,17 @@ export default function Batch(props) {
                       <td>
                         <input
                           className="inputDay"
-                          style={{width:"200px"}}
+                          style={{ width: "200px" }}
                           type="date"
                           name="dateEnd"
+                          min={dateEnd}
                           onChange={handleAddFormChange}
                         ></input>
                         <br></br>
                       </td>
                     </tr>
                     <div className="modal-footer">
-                    
+
                       <button
                         type="button"
                         className="btn btn-secondary btn-Batch-Cancel"
@@ -257,15 +297,56 @@ export default function Batch(props) {
                       <button
                         type="submit"
                         className="btn btn-primary btn-Batch"
+                        data-toggle="modal"
+                        data-target={messageErr}
+                        data-bs-dismiss="modal"
                       >
                         Thêm
                       </button>
+
+
                     </div>
                   </form>
                 </div>
               </div>
             </div>
           </div>
+          <div class="modal fade modal-fade"
+            id="messageErr"
+            // tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true" >
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content modal-content-center" style={{ marginTop: '0', border: '1px solid black'}}>
+                <div className="modal-header">
+                  <div className="container d-flex pl-0">
+                    <h5
+                      className="modal-title ml-2"
+                      id="exampleModalLabel"
+                      style={{ color: "#f23a3a" }}
+                    >
+                      Thông báo!
+                    </h5>
+                  </div>
+
+                </div>
+                <div className="modal-body" style={{ textAlign: "center" }}>
+                  {constTable.EQUALBATCH}
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-danger-del"
+                    data-dismiss="modal"
+                  >
+                    Đồng ý
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
