@@ -4,7 +4,7 @@ import * as constTable from "../../../constant/constTable";
 import * as constCandi from "../../../constant/constCandidate";
 import Pagination from "../pagination/index";
 import { withRouter } from "react-router-dom";
-import {  batchAPI, UploadAPI } from "../../../api/service";
+import { batchAPI, UploadAPI } from "../../../api/service";
 import CalendarInterview from "../../calendarinterview/create/index";
 import { popUpActions } from "../../../redux/store/popup";
 import Preview from "../../calendarinterview/review";
@@ -18,6 +18,9 @@ function TableCandidate() {
   const [currPage, setCurrPage] = useState(1);
   const [candiPerPage, setCandiPerPage] = useState();
   const idBatch = localStorage.getItem("idBatch");
+  const [statusBatch, setStatusBatch] = useState([]);
+  const [idModalMessage, setIdModalMessage] = useState('')
+
   useEffect(() => {
     apiaxios
       .candidateAPI(`candidate/batch/${idBatch}?page=${currPage}`)
@@ -27,12 +30,21 @@ function TableCandidate() {
       });
   }, [currPage]);
 
-  const [batch, setBatch] = useState([]);
   useEffect(() => {
-    apiaxios.batchAPI("internshipcourse").then((res) => {
-      setBatch(res.data.data);
-    });
+    apiaxios.batchHome(`internshipcourse/${idBatch}`, null)
+      .then((res) => {
+        setStatusBatch(res.data.data) //setIdcourse(res.data.data)
+
+      });
   }, []);
+  //fix bug add candidate batch done
+  useEffect(() => {
+    if (statusBatch.status === 'Done') {
+      setIdModalMessage("#messageBatchDone")
+    } else {
+      setIdModalMessage("#exampleModalAdd")
+    }
+  }, [statusBatch]);
 
   const [addCandi, setAddCandi] = useState({
     fullName: "",
@@ -59,6 +71,7 @@ function TableCandidate() {
     certificationDate: "",
     status: "",
   });
+
   const closeModal = () => {
     const modals = document.getElementById("exampleModalAdd");
     modals.style.display = "none";
@@ -101,9 +114,9 @@ function TableCandidate() {
       status: statusaass,
     };
     apiaxios
-    .candidatePost("candidate/create", newCadidate)
+      .candidatePost("candidate/create", newCadidate)
       .then((res) => {
-        const newCadidates = [ newCadidate,...candi];
+        const newCadidates = [newCadidate, ...candi];
         setCandi(newCadidates);
         handleReset();
         closeModal();
@@ -371,10 +384,10 @@ function TableCandidate() {
       },
     };
     UploadAPI("upload", formData, config)
-    .then((res) => {
-      tai_lai_trang();
-      setCandi();
-    })
+      .then((res) => {
+        tai_lai_trang();
+        setCandi();
+      })
       // .catch((error) => {
       //   if (error.response) {
       //     Swal.fire({
@@ -430,6 +443,15 @@ function TableCandidate() {
           <i class="search__icon fa fa-search"></i>
         </div>
       </div>
+      <button
+        id="open-addcandi"
+        className="btn-add-candi"
+        type="submit"
+        data-toggle="modal"
+        data-target={idModalMessage}
+      >
+        Thêm
+      </button>
       <div className="grid wide home-candidate">
         <div className="row home-candidate--list">
           <span className="col l-2-8-candi ">{constTable.NAME}</span>
@@ -447,7 +469,7 @@ function TableCandidate() {
                 className="row sm-gutter sm-gutter--list"
                 key={candidate.idCandidate}
               >
-                <li className="col l-2-8-candi" style={{paddingLeft:"16px"}}>{candidate.fullName}</li>
+                <li className="col l-2-8-candi" style={{ paddingLeft: "16px" }}>{candidate.fullName}</li>
                 <li className="col l-2-8-candi">{candidate.emailCandidate}</li>
                 <li className="col l-2-8-candi">{candidate.studentID}</li>
                 <li className="col l-2-8-candi">{candidate.university}</li>
@@ -1329,6 +1351,42 @@ function TableCandidate() {
         totalCandis={candiPerPage}
         paginate={paginate}
       />
+      <div class="modal fade modal-fade"
+        id="messageBatchDone"
+        // tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true" >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content modal-content-center" style={{marginTop: '0'}}>
+            <div className="modal-header">
+              <div className="container d-flex pl-0">
+                <h5
+                  className="modal-title ml-2"
+                  id="exampleModalLabel"
+                  style={{ color: "#f23a3a" }}
+                >
+                  Thông báo!
+                </h5>
+              </div>
+
+            </div>
+            <div className="modal-body" style={{textAlign: "center"}}>
+              {constTable.MESSBATCHDONE}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-danger-del"
+                data-dismiss="modal"
+                onClick={handleReset}
+              >
+                Đồng ý
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div
         class="modal fade modal-fade"
         id="exampleModalAdd"
@@ -1517,7 +1575,7 @@ function TableCandidate() {
                     </td>
                     <td>
                       <select
-                        style={{ width:"189.04px", height:"29.98px"}}
+                        style={{ width: "189.04px", height: "29.98px" }}
                         clasName="input-candidate"
                         name="preferredInternshipDuration"
                         id="inter-duration"
@@ -1547,7 +1605,7 @@ function TableCandidate() {
                     </td>
                     <td>
                       <select
-                        style={{ width:"189.04px", height:"29.98px"}}
+                        style={{ width: "189.04px", height: "29.98px" }}
                         name="internshipSchedule"
                         id="intern-schehdule"
                         onChange={handleAddFormChange}
@@ -1575,8 +1633,8 @@ function TableCandidate() {
                       <label>{constCandidate.TYPEPC}</label>
                     </td>
                     <td>
-                      <select 
-                        style={{ width:"189.04px", height:"29.98px"}}
+                      <select
+                        style={{ width: "189.04px", height: "29.98px" }}
                         name="pcType" onChange={handleAddFormChange}>
                         <option disabled selected hidden>
                           Chọn...
@@ -1609,7 +1667,7 @@ function TableCandidate() {
                     </td>
                   </tr>
                   <tr>
-                   
+
                     <td className="left-modal">
                       <label>{constCandidate.CVIDINFO}</label>
                     </td>
@@ -1646,15 +1704,42 @@ function TableCandidate() {
           </div>
         </div>
       </div>
-      <button
-        id="open-addcandi"
-        className="btn-add-candi"
-        type="submit"
-        data-toggle="modal"
-        data-target="#exampleModalAdd"
-      >
-        Thêm
-      </button>
+      <div class="modal fade modal-fade"
+        id="messageDuplicateStudenID"
+        // tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true" >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content modal-content-center" style={{marginTop: '0'}}>
+            <div className="modal-header">
+              <div className="container d-flex pl-0">
+                <h5
+                  className="modal-title ml-2"
+                  id="exampleModalLabel"
+                  style={{ color: "#f23a3a" }}
+                >
+                  Thông báo!
+                </h5>
+              </div>
+
+            </div>
+            <div className="modal-body" style={{textAlign: "center"}}>
+              {constTable.MESSBATCHDONE}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-danger-del"
+                data-dismiss="modal"
+                onClick={handleReset}
+              >
+                Đồng ý
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

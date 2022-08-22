@@ -38,6 +38,7 @@ export default function Internships(props) {
       kindOfInternship: products.kindOfInternship,
       status: products.status,
     };
+    console.log(products);
     setValues(formValues);
   };
   const modals = document.getElementById("myModalBatch");
