@@ -15,6 +15,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useForm } from "react-hook-form";
@@ -35,6 +36,11 @@ export default function SelectBatch() {
   // set data date format
   const [dateStart, setDateStart] = useState("");
   const [dateEnd, setDateEnd] = useState("");
+  const [error, setError] = useState("");
+  const [dateEndLast, setIsDateDuplicate] = useState("");
+  const [batchTitle, setBatchTile] = useState("");
+  const [isCheckDate, setIsCheckDate] = useState(false);
+  
   const { register, handleSubmit } = useForm();
 
   useEffect(() => {
@@ -43,55 +49,70 @@ export default function SelectBatch() {
     });
   }, []);
 
+  console.log(posts);
+  useEffect(() => {
+    posts.every((item) => {
+      let dateEndPrev = dayjs(item.dateEnd).format("YYYY/MM/DD");
+      setIsDateDuplicate(dateEndPrev);
+      setBatchTile(item.nameCoure);
+    });
+  }, [posts, dateStart]);
+
   const onSubmit = (data) => {
     data.dateStart = dayjs(dateStart).format("YYYY/MM/DD");
     data.dateEnd = dayjs(dateEnd).format("YYYY/MM/DD");
+    console.log(data);
+      apiaxios
+        .batchCreate("internshipcourse/create", data)
+        .then((res) => {
+          if (res) {
+            history.push(`/Home/batch/?id=${res.data.idInternshipCourse}`);
+          }
+        })
+        .catch((error) => {
+          error ? setOpen(false) : setOpen(true);
 
-    apiaxios
-      .batchCreate("internshipcourse/create", data)
-      .then((res) => {
-        if (res) {
-          history.push(`/Home/batch/?id=${res.data.idInternshipCourse}`);
-        }
-      })
-      .catch((error) => {
-        error ? setOpen(false) : setOpen(true);
-
-        if (error.response) {
-          Swal.fire({
-            icon: "error",
-            text: error.response.data.error,
-            confirmButtonText: "Xác nhận",
-          }).then(function (isConfirm) {
-            if (isConfirm) {
-              setOpen(true);
-            }
-          });
-        } else if (error.request) {
-          Swal.fire({
-            icon: "error",
-            text: error.request,
-            confirmButtonText: "Xác nhận",
-          });
-        } else {
-          console.log("Error", error.message);
-          Swal.fire({
-            icon: "error",
-            text: error.message,
-            confirmButtonText: "Xác nhận",
-          });
-        }
-      });
+          if (error.response) {
+            Swal.fire({
+              icon: "error",
+              text: error.response.data.error,
+              confirmButtonText: "Xác nhận",
+            }).then(function (isConfirm) {
+              if (isConfirm) {
+                setOpen(true);
+              }
+            });
+          } else if (error.request) {
+            Swal.fire({
+              icon: "error",
+              text: error.request,
+              confirmButtonText: "Xác nhận",
+            });
+          } else {
+            console.log("Error", error.message);
+            Swal.fire({
+              icon: "error",
+              text: error.message,
+              confirmButtonText: "Xác nhận",
+            });
+          }
+        });
   };
+
   const handleSelect = () => {
     try {
-      if (idTemp !== undefined) {
+      if (idTemp !== "") {
         history.push(`/Home/batch/?id=${idTemp}`);
       } else {
+        setOpenSelect(false);
         Swal.fire({
           icon: "error",
           text: "Bạn cần chọn Batch !",
           confirmButtonText: "Xác nhận",
+        }).then(function (isConfirm) {
+          if (isConfirm) {
+            setOpenSelect(true);
+          }
         });
       }
     } catch (error) {
@@ -166,9 +187,16 @@ export default function SelectBatch() {
           inputFormat="DD/MM/YYYY"
           value={dateStart}
           onChange={(newValue) => {
-            setDateStart(dayjs(newValue).format("MM/DD/YYYY"));
+            let newData = dayjs(newValue).format("YYYY/MM/DD");
+            setDateStart(newData);
+            if (newData <= dateEndLast) {
+              setError(`${batchTitle} kết thúc vào ngày ${dayjs(dateEndLast).format("DD/MM/YYYY")} (vui lòng chọn sau ngày ${dayjs(dateEndLast).format("DD/MM/YYYY")})`);
+              setIsCheckDate(true);
+            } else {
+              setIsCheckDate(false);
+            }
           }}
-          renderInput={(params) => <TextField {...params} size="small" />}
+          renderInput={(params) => <TextField size="small" {...params} />}
         />
         <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
           <InputLabel htmlFor="grouped-select">Loại thực tập</InputLabel>
@@ -192,21 +220,29 @@ export default function SelectBatch() {
           inputFormat="DD/MM/YYYY"
           value={dateEnd}
           onChange={(newValue) => {
-            setDateEnd(dayjs(newValue).format("MM/DD/YYYY"));
+            setDateEnd(newValue);
           }}
           renderInput={(params) => <TextField {...params} size="small" />}
         />
+      </div>
+      <div>
+        <Typography sx={{ color: "red", textAlign: "center", m: "auto", width: "300px", wordWrap: "break-word"}}>
+          {isCheckDate ? error : ""}
+        </Typography>
       </div>
     </LocalizationProvider>
   );
 
   const button = "Xác nhận";
-  const buttonAdd = "Thêm";
+  const buttonAdd = (
+    <Button variant="contained" type="submit" autoFocus>
+      Thêm
+    </Button>
+  );
   return (
     <>
       <Dialog
         open={openSelect}
-        // onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         maxWidth="lg"
