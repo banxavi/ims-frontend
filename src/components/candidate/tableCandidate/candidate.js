@@ -162,7 +162,16 @@ export default function Candidate() {
     setOpenViewData(true);
   };
   const handleOpenAdd = () => {
-    setOpenAdd(true);
+    if (batchTitle.status !== "Done") {
+      setOpenAdd(true);
+    }else {
+      Swal.fire({
+        icon: "error",
+        title: "Batch đã kết thúc!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
   };
 
   const handleOpenEdit = () => {
