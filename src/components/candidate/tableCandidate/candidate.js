@@ -164,7 +164,7 @@ export default function Candidate() {
   const handleOpenAdd = () => {
     if (batchTitle.status !== "Done") {
       setOpenAdd(true);
-    }else {
+    } else {
       Swal.fire({
         icon: "error",
         title: "Batch đã kết thúc!",
@@ -506,7 +506,9 @@ export default function Candidate() {
           size="small"
           defaultValue={values.fullName}
           name="fullName"
-          {...register("fullName")}
+          {...register("fullName", {
+            required: true,
+          })}
         />
         <TextField
           required
@@ -515,7 +517,9 @@ export default function Candidate() {
           size="small"
           defaultValue={values.tel}
           name="tel"
-          {...register("tel")}
+          {...register("tel", {
+            required: true,
+          })}
         />
         <TextField
           required
@@ -524,7 +528,9 @@ export default function Candidate() {
           size="small"
           defaultValue={values.emailCandidate}
           name="emailCandidate"
-          {...register("emailCandidate")}
+          {...register("emailCandidate", {
+            required: true,
+          })}
         />
       </div>
       <Typography sx={{ ml: 1, mt: 1, fontWeight: 600 }}>
@@ -538,7 +544,9 @@ export default function Candidate() {
           size="small"
           defaultValue={values.studentID}
           name="studentID"
-          {...register("studentID")}
+          {...register("studentID", {
+            required: true,
+          })}
         />
         <TextField
           required
@@ -547,7 +555,9 @@ export default function Candidate() {
           size="small"
           defaultValue={values.faculty}
           name="faculty"
-          {...register("faculty")}
+          {...register("faculty", {
+            required: true,
+          })}
         />
         <TextField
           required
@@ -556,7 +566,9 @@ export default function Candidate() {
           label="Trường học"
           defaultValue={values.university}
           name="university"
-          {...register("university")}
+          {...register("university", {
+            required: true,
+          })}
         />
       </div>
       <div>
@@ -567,7 +579,9 @@ export default function Candidate() {
           size="small"
           defaultValue={values.currentYearofStudy}
           name="currentYearofStudy"
-          {...register("currentYearofStudy")}
+          {...register("currentYearofStudy", {
+            required: true,
+          })}
         />
         <TextField
           required
@@ -576,7 +590,9 @@ export default function Candidate() {
           label="Điểm TB (Hệ 10)"
           defaultValue={values.GPA}
           name="GPA"
-          {...register("GPA")}
+          {...register("GPA", {
+            required: true,
+          })}
         />
         <TextField
           required
@@ -585,7 +601,9 @@ export default function Candidate() {
           label="Năm tốt nghiệp"
           defaultValue={values.graduationYear}
           name="graduationYear"
-          {...register("graduationYear")}
+          {...register("graduationYear", {
+            required: true,
+          })}
         />
       </div>
       <div>
@@ -596,7 +614,9 @@ export default function Candidate() {
           label="Dự kiến tốt nghiệp"
           defaultValue={values.expectedGraduationSchedule}
           name="expectedGraduationSchedule"
-          {...register("expectedGraduationSchedule")}
+          {...register("expectedGraduationSchedule", {
+            required: true,
+          })}
         />
 
         <TextField
@@ -606,7 +626,9 @@ export default function Candidate() {
           label="Môn học còn lại"
           defaultValue={values.remainingSubjects}
           name="remainingSubjects"
-          {...register("remainingSubjects")}
+          {...register("remainingSubjects", {
+            required: true,
+          })}
         />
 
         <TextField
@@ -616,7 +638,9 @@ export default function Candidate() {
           label="Dự án đã tham gia"
           defaultValue={values.projectExperience}
           name="projectExperience"
-          {...register("projectExperience")}
+          {...register("projectExperience", {
+            required: true,
+          })}
         />
       </div>
       <Typography sx={{ ml: 1, mt: 1, fontWeight: 600 }}>
@@ -630,7 +654,9 @@ export default function Candidate() {
           label="Vị trí thực tập"
           defaultValue={values.internshipDomain}
           name="internshipDomain"
-          {...register("internshipDomain")}
+          {...register("internshipDomain", {
+            required: true,
+          })}
         />
 
         <FormControl
@@ -645,7 +671,9 @@ export default function Candidate() {
             id="grouped-select"
             label="Thời gian thực tập"
             name="preferredInternshipDuration"
-            {...register("preferredInternshipDuration")}
+            {...register("preferredInternshipDuration", {
+              required: true,
+            })}
           >
             <MenuItem value="8 weeks">8 tuần</MenuItem>;
             <MenuItem value="12 weeks">12 tuần</MenuItem>;
@@ -663,7 +691,9 @@ export default function Candidate() {
             id="grouped-select"
             label="Loại thực tập"
             name="internshipSchedule"
-            {...register("internshipSchedule")}
+            {...register("internshipSchedule", {
+              required: true,
+            })}
           >
             <MenuItem value="Full time">Full time</MenuItem>;
             <MenuItem value="Part time">Part time</MenuItem>;
@@ -678,7 +708,9 @@ export default function Candidate() {
           label="Kĩ năng"
           defaultValue={values.preferredSkills}
           name="preferredSkills"
-          {...register("preferredSkills")}
+          {...register("preferredSkills", {
+            required: true,
+          })}
         />
 
         <FormControl
@@ -693,7 +725,9 @@ export default function Candidate() {
             id="grouped-select"
             label="Loại PC"
             name="pcType"
-            {...register("pcType")}
+            {...register("pcType", {
+              required: true,
+            })}
           >
             <MenuItem value="PC">PC</MenuItem>;
             <MenuItem value="Laptop">Laptop</MenuItem>;
@@ -728,7 +762,9 @@ export default function Candidate() {
           label="Giấy chứng nhận"
           defaultValue={values.covidVaccinationCertificate}
           name="covidVaccinationCertificate"
-          {...register("covidVaccinationCertificate")}
+          {...register("covidVaccinationCertificate", {
+            required: true,
+          })}
         />
 
         <DesktopDatePicker
@@ -756,7 +792,9 @@ export default function Candidate() {
           label="Tiêm chủng Covid"
           defaultValue={values.covidVaccinationiInformation}
           name="covidVaccinationiInformation"
-          {...register("covidVaccinationiInformation")}
+          {...register("covidVaccinationiInformation", {
+            required: true,
+          })}
         />
       </div>
     </LocalizationProvider>
@@ -777,6 +815,8 @@ export default function Candidate() {
         openAdd={openAdd}
         setOpenAdd={setOpenAdd}
         fetchCandi={fetchCandi}
+        candi={candi}
+
       />
       {/* load data display */}
       <ReusableTable

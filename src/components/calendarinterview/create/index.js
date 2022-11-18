@@ -95,7 +95,6 @@ const CalendarInterview = () => {
           title: "Tạo lịch phỏng vấn thành công",
           showConfirmButton: false,
           timer: 1500,
-          style: "display:block",
         });
         dispatch(popUpActions.hide());
         setEnterEmail("");
