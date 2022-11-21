@@ -15,7 +15,6 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Fade from "@mui/material/Fade";
 
 export default function MenuBar() {
   // state open menu mutil level and navbar
@@ -91,278 +90,293 @@ export default function MenuBar() {
   };
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          {/* menu responsive md */}
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            IMS
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNav}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={openNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={isOpenNav}
-              onClose={handleClose}
+    <> 
+    {/* position="static" */}
+      <AppBar>
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            {/* menu responsive md */}
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
               sx={{
-                display: { xs: "block", md: "none" },
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
             >
-              <MenuItem>
-                <Typography
-                  component={Link}
-                  onClick={handleClose}
-                  to="/mentor"
-                  sx={{
-                    my: 0,
-                    display: "block",
-                    textDecoration: "none",
-                    color: "inherit",
-                  }}
-                >
-                  Mentor
-                </Typography>
-              </MenuItem>
-              <MenuItem>
-                <Typography
-                  sx={{ my: 0, display: "block" }}
-                  onClick={handleOpenUvNav}
-                >
-                  Ứng viên
-                </Typography>
-                <Menu
-                  id="fade-menu"
-                  MenuListProps={{
-                    "aria-labelledby": "fade-button",
-                  }}
-                  anchorEl={openUvNav}
-                  open={isOpenUvNav}
-                  onClose={handleCloseUvNav}
-                  // TransitionComponent={Fade}
-                >
-                  <MenuItem
+              IMS
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNav}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={openNav}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={isOpenNav}
+                onClose={handleClose}
+                sx={{
+                  display: { xs: "block", md: "none" },
+                }}
+              >
+                <MenuItem>
+                  <Typography
                     component={Link}
-                    to="/candidate"
                     onClick={handleClose}
+                    to="/mentor"
+                    sx={{
+                      my: 0,
+                      display: "block",
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
                   >
-                    Quản lý ứng viên adad
-                  </MenuItem>
-                  <MenuItem
-                    component={Link}
-                    to="/interview"
-                    onClick={handleClose}
-                  >
-                    Kết quả phỏng vấn
-                  </MenuItem>
-                </Menu>
-              </MenuItem>
-
-              <MenuItem>
-                <Typography
-                  component={Link}
-                  to="/student"
-                  sx={{
-                    my: 0,
-                    display: "block",
-                    textDecoration: "none",
-                    color: "inherit",
-                  }}
-                >
-                  Sinh viên
-                </Typography>
-              </MenuItem>
-              <MenuItem>
-                <Typography
-                  sx={{ my: 0, display: "block" }}
-                  onClick={handleOpenBatchNav}
-                >
-                  Khóa thực tập
-                </Typography>
-                <Menu
-                  id="fade-menu"
-                  MenuListProps={{
-                    "aria-labelledby": "fade-button",
-                  }}
-                  anchorEl={openBatchNav}
-                  open={isOpenBatchNav}
-                  onClose={handleCloseBatchNav}
-                  // TransitionComponent={Fade}
-                >
-                  <MenuItem
-                    component={Link}
-                    to="/internshipcourse"
-                    onClick={handleClose}
-                  >
-                    Quản lý khóa thực tập
-                  </MenuItem>
-                  <MenuItem component={Link} to="/dg" onClick={handleClose}>
-                    Quản lý nhóm
-                  </MenuItem>
-                </Menu>
-              </MenuItem>
-
-              <MenuItem sx={{ pb: 2 }}>
-                <Typography
-                  component={Link}
-                  to="/batch"
-                  sx={{
-                    my: 0,
-                    display: "block",
-                    textDecoration: "none",
-                    color: "inherit",
-                  }}
-                >
-                  Chọn Batch
-                </Typography>
-              </MenuItem>
-              <MenuItem sx={{ borderTop: "1px solid black" }}>
-                <Tooltip>
-                  <Typography onClick={logoutHandler} sx={{ color: "#e84747" }}>
-                    Đăng xuất
+                    Mentor
                   </Typography>
-                </Tooltip>
-              </MenuItem>
-            </Menu>
-          </Box>
+                </MenuItem>
+                <MenuItem>
+                  <Typography
+                    sx={{ my: 0, display: "block" }}
+                    onClick={handleOpenUvNav}
+                  >
+                    Ứng viên
+                  </Typography>
+                  <Menu
+                    id="fade-menu"
+                    MenuListProps={{
+                      "aria-labelledby": "fade-button",
+                    }}
+                    anchorEl={openUvNav}
+                    open={isOpenUvNav}
+                    onClose={handleCloseUvNav}
+                    // TransitionComponent={Fade}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to="/candidate"
+                      onClick={handleClose}
+                    >
+                      Quản lý ứng viên
+                    </MenuItem>
+                    <MenuItem
+                      component={Link}
+                      to="/interview"
+                      onClick={handleClose}
+                    >
+                      Kết quả phỏng vấn
+                    </MenuItem>
+                  </Menu>
+                </MenuItem>
 
-          {/* menu responsive lg */}
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            IMS
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Button
-              component={Link}
-              to="/mentor"
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              Quản lý Mentor
-            </Button>
-            <Button
-              sx={{ my: 2, color: "white", display: "block" }}
-              onClick={handleOpenUv}
-            >
-              Ứng viên
-            </Button>
-            <Menu
-              id="fade-menu"
-              MenuListProps={{
-                "aria-labelledby": "fade-button",
+                <MenuItem>
+                  <Typography
+                    component={Link}
+                    to="/student"
+                    sx={{
+                      my: 0,
+                      display: "block",
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
+                    Sinh viên
+                  </Typography>
+                </MenuItem>
+                <MenuItem>
+                  <Typography
+                    sx={{ my: 0, display: "block" }}
+                    onClick={handleOpenBatchNav}
+                  >
+                    Khóa thực tập
+                  </Typography>
+                  <Menu
+                    id="fade-menu"
+                    MenuListProps={{
+                      "aria-labelledby": "fade-button",
+                    }}
+                    anchorEl={openBatchNav}
+                    open={isOpenBatchNav}
+                    onClose={handleCloseBatchNav}
+                    // TransitionComponent={Fade}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to="/internshipcourse"
+                      onClick={handleClose}
+                    >
+                      Quản lý khóa thực tập
+                    </MenuItem>
+                    <MenuItem component={Link} to="/dg" onClick={handleClose}>
+                      Quản lý nhóm
+                    </MenuItem>
+                  </Menu>
+                </MenuItem>
+
+                <MenuItem sx={{ pb: 2 }}>
+                  <Typography
+                    component={Link}
+                    to="/batch"
+                    sx={{
+                      my: 0,
+                      display: "block",
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
+                    Chọn Batch
+                  </Typography>
+                </MenuItem>
+                <MenuItem sx={{ borderTop: "1px solid black" }}>
+                  <Tooltip>
+                    <Typography
+                      onClick={logoutHandler}
+                      sx={{ color: "#e84747" }}
+                    >
+                      Đăng xuất
+                    </Typography>
+                  </Tooltip>
+                </MenuItem>
+              </Menu>
+            </Box>
+
+            {/* menu responsive lg */}
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                mr: 2,
+                display: { xs: "flex", md: "none" },
+                flexGrow: 1,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
-              anchorEl={openUv}
-              open={isOpenUv}
-              onClose={handleClose}
-              // TransitionComponent={Fade}
             >
-              <MenuItem component={Link} to="/candidate" onClick={handleClose}>
-                Quản lý ứng viên
-              </MenuItem>
-              <MenuItem component={Link} to="/interview" onClick={handleClose}>
-                Kết quả phỏng vấn
-              </MenuItem>
-            </Menu>
-            <Button
-              component={Link}
-              to="/student"
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              Quản lý sinh viên
-            </Button>
-            <Button
-              sx={{ my: 2, color: "white", display: "block" }}
-              onClick={handleOpenBatch}
-            >
-              Quản lý khóa thực tập
-            </Button>
-            <Menu
-              id="fade-menu"
-              MenuListProps={{
-                "aria-labelledby": "fade-button",
-              }}
-              anchorEl={openBatch}
-              open={isOpenBatch}
-              onClose={handleClose}
-              // TransitionComponent={Fade}
-            >
-              <MenuItem
+              IMS
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              <Button
                 component={Link}
-                to="/internshipcourse"
-                onClick={handleClose}
+                to="/mentor"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Quản lý Mentor
+              </Button>
+              <Button
+                sx={{ my: 2, color: "white", display: "block" }}
+                onClick={handleOpenUv}
+              >
+                Ứng viên
+              </Button>
+              <Menu
+                id="fade-menu"
+                MenuListProps={{
+                  "aria-labelledby": "fade-button",
+                }}
+                anchorEl={openUv}
+                open={isOpenUv}
+                onClose={handleClose}
+                // TransitionComponent={Fade}
+              >
+                <MenuItem
+                  component={Link}
+                  to="/candidate"
+                  onClick={handleClose}
+                >
+                  Quản lý ứng viên
+                </MenuItem>
+                <MenuItem
+                  component={Link}
+                  to="/interview"
+                  onClick={handleClose}
+                >
+                  Kết quả phỏng vấn
+                </MenuItem>
+              </Menu>
+              <Button
+                component={Link}
+                to="/student"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Quản lý sinh viên
+              </Button>
+              <Button
+                sx={{ my: 2, color: "white", display: "block" }}
+                onClick={handleOpenBatch}
               >
                 Quản lý khóa thực tập
-              </MenuItem>
-              <MenuItem component={Link} to="/dg" onClick={handleClose}>
-                Quản lý nhóm
-              </MenuItem>
-            </Menu>
-            <Button
-              component={Link}
-              to="/batch"
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              Chọn Batch
-            </Button>
-          </Box>
-          <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-            <Typography sx={{ pt: 0.6 }}>
-              <AccountCircleIcon />
-            </Typography>
-            <Typography sx={{ pr: 2, pt: 0.8 }}>{id}</Typography>
-            <Tooltip>
-              <Button onClick={logoutHandler} sx={{ color: "white" }}>
-                Đăng xuất
               </Button>
-            </Tooltip>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+              <Menu
+                id="fade-menu"
+                MenuListProps={{
+                  "aria-labelledby": "fade-button",
+                }}
+                anchorEl={openBatch}
+                open={isOpenBatch}
+                onClose={handleClose}
+                // TransitionComponent={Fade}
+              >
+                <MenuItem
+                  component={Link}
+                  to="/internshipcourse"
+                  onClick={handleClose}
+                >
+                  Quản lý khóa thực tập
+                </MenuItem>
+                <MenuItem component={Link} to="/dg" onClick={handleClose}>
+                  Quản lý nhóm
+                </MenuItem>
+              </Menu>
+              <Button
+                component={Link}
+                to="/batch"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Chọn Batch
+              </Button>
+            </Box>
+            <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
+              <Typography sx={{ pt: 0.6 }}>
+                <AccountCircleIcon />
+              </Typography>
+              <Typography sx={{ pr: 2, pt: 0.8 }}>{id}</Typography>
+              <Tooltip>
+                <Button onClick={logoutHandler} sx={{ color: "white" }}>
+                  Đăng xuất
+                </Button>
+              </Tooltip>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+      <Box component="div" sx={{height: "70px"}} />
+    </>
   );
 }
