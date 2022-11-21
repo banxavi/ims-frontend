@@ -1,151 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import * as apiaxios from "../../../api/service";
-import dayjs from "dayjs";
-import "./styleStudent.css";
 import Swal from "sweetalert2";
-export default function AddStudent() {
+import ReusableDialog from "../../componentsReuse/reusableDialog";
+import { useForm } from "react-hook-form";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import dayjs from "dayjs";
+
+export default function AddStudent(props) {
+  const today = new Date();
   const [posts, setPosts] = useState([]);
-  const [dg, setDg] = useState([]);
-  const [idDG, setIdDG] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [titleBatch, settitleBatch] = useState([]);
+  const { register, handleSubmit, reset } = useForm();
+  const [testDate, setTestDate] = useState("");
+  const [certificationDate, setCertificationDate] = useState("");
   const idBatch = localStorage.getItem("idBatch");
-  const [student, setStudent] = useState([]);
-  console.log(idDG);
-  useEffect(() => {
-    apiaxios.batchAPI("internshipcourse").then((res) => {
-      setStudent(res.data.data);
-    });
-  }, []);
-  useEffect(() => {
-    apiaxios.student(`internship/batch/${idBatch}`).then((res) => {
-      setPosts(res.data.data);
-    });
-  }, []);
-  useEffect(() => {
+
+  const onSubmit = (dataAdd) => {
+    dataAdd.testDate = dayjs(testDate).format("YYYY/MM/DD");
+    dataAdd.certificationDate = dayjs(certificationDate).format("YYYY/MM/DD");
     apiaxios
-      .batchAPI(`internshipcourse/${idBatch}`, "Get", null)
+      .studentCreate(`internship?idInternshipCourse=${idBatch}`, dataAdd)
       .then((res) => {
-        settitleBatch(res.data.data);
-      });
-  }, {});
-  useEffect(() => {
-    apiaxios.dg(`dg?idInternshipCourse=${idBatch}`).then((res) => {
-      setDg(res.data.data);
-    });
-  }, []);
-  const [mentor, setmentor] = useState([]);
-  useEffect(() => {
-    const fetchDatas = async () => {
-      apiaxios
-        .mentorAPI(`mentor/batch/${idBatch}?idDG=${idDG}`, null)
-        .then((res) => {
-          setmentor(res.data.data);
-        });
-    };
-    fetchDatas();
-  }, [idDG]);
-  const handleCancelFormSubmit = () => {
-    setAddFormData({});
-    Array.from(document.querySelectorAll("input")).forEach(
-      (input) => (input.value = "")
-    );
-    Array.from(document.querySelectorAll("select")).forEach(
-      (select) => (select.value = "Chọn...")
-    );
-  };
-  const closeModal = () => {
-    const modals = document.getElementById("exampleModalStudent");
-    modals.style.display = "none";
-  };
-  const [addFormData, setAddFormData] = useState({
-    idInternship: "",
-    fullNameInternship: "",
-    address: "",
-    dayOfBirth: "",
-    university: "",
-    email: "",
-    idMentor: "",
-    telInternship: "",
-    internshipProject: "",
-    internshipAgreementPolicy: "",
-    securityTest: "",
-    idDG: "",
-    toeicScore: "",
-    testDate: "",
-    securityAwareness: "",
-    pmtoolsAgileMethodology: "",
-    workEtiquetteProfessionalCommunication: "",
-    presentationSkills: "",
-    trainingAttendance: "",
-    status: "",
-    remark: "",
-    pcType: "",
-    internshipSchedule: "",
-    covidVaccinationiInformation: "",
-    certificationDate: "",
-    internshipDomain: "",
-    idInternshipCourse: "",
-  });
-  const handleAddFormChange = (event) => {
-    event.preventDefault();
-    const fieldName = event.target.getAttribute("name");
-    const fieldValue = event.target.value;
-    const newFormData = { ...addFormData };
-    newFormData[fieldName] = fieldValue;
-    setAddFormData(newFormData);
-  };
-  const handleOpenModal = () => {
-    setOpen(true);
-  };
-  const handleCloseModal = () => {
-    setOpen(false);
-  };
-  const tai_lai_trang = (event) => {
-    window.location.reload();
-  };
-  const handleAddFormSubmit = (event) => {
-    event.preventDefault();
-    const newContact = {
-      idInternship: addFormData.idInternship,
-      fullNameInternship: addFormData.fullNameInternship,
-      address: addFormData.address,
-      dayOfBirth: addFormData.dayOfBirth,
-      university: addFormData.university,
-      email: addFormData.email,
-      idMentor: addFormData.idMentor,
-      telInternship: addFormData.telInternship,
-      internshipProject: addFormData.internshipProject,
-      internshipAgreementPolicy: addFormData.internshipAgreementPolicy,
-      securityTest: addFormData.securityTest,
-      idDG: idDG,
-      toeicScore: addFormData.toeicScore,
-      testDate: addFormData.testDate,
-      securityAwareness: addFormData.securityAwareness,
-      securityAwareness: addFormData.securityAwareness,
-      pmtoolsAgileMethodology: addFormData.pmtoolsAgileMethodology,
-      workEtiquetteProfessionalCommunication:
-        addFormData.workEtiquetteProfessionalCommunication,
-      presentationSkills: addFormData.presentationSkills,
-      trainingAttendance: addFormData.trainingAttendance,
-      status: addFormData.status,
-      remark: addFormData.remark,
-      pcType: addFormData.pcType,
-      internshipSchedule: addFormData.internshipSchedule,
-      covidVaccinationiInformation: addFormData.covidVaccinationiInformation,
-      certificationDate: addFormData.certificationDate,
-      internshipDomain: addFormData.internshipDomain,
-      idInternshipCourse: addFormData.idInternshipCourse,
-    };
-    apiaxios
-      .studentCreate(`internship?idInternshipCourse=${idBatch}`, newContact)
-      .then((res) => {
-        const newBatch = [...posts,newContact];
+        const newBatch = [...posts, dataAdd];
         setPosts(newBatch);
-        handleCloseModal();
-        closeModal();
-        handleCancelFormSubmit();
-        tai_lai_trang();
+        if (res.data) {
+          Swal.fire({
+            icon: "success",
+            title: "Thêm thành công",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+        props.fetchData();
+        reset();
       })
       .catch((error) => {
         if (error.response) {
@@ -169,409 +66,403 @@ export default function AddStudent() {
           });
         }
       });
+    handleClose();
   };
-  return (
-    <div
-      className="modal fade"
-      id="exampleModalStudent"
-      tabIndex={-1}
-      role="dialog"
-      aria-labelledby="exampleModalStudent"
-      aria-hidden="true"
-    >
-      <div
-        className="modal-dialog modal-lg"
-        role="document"
-        style={{ width: "700px", marginTop: "5px" }}
-      >
-        <div
-          className="modal-content"
-          style={{ marginTop: "10px", width: "770px" }}
-        >
-          <div className="modal-header">
-            <h4 id="exampleModalStudent">THÊM THỰC TẬP SINH</h4>
-            <button
-              type="button"
-              className="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div className="modal-body">
-            <form>
-              <tr>
-                <td>
-                  <label>Họ tên:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="fullNameInternship"
-                    onChange={handleAddFormChange}
-                  />
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label>Địa chỉ: </label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="address"
-                    onChange={handleAddFormChange}
-                  ></input>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>Trạng thái: </label>
-                </td>
-                <td>
-                  <select
-                    style={{ height: "30px", width: "200px" }}
-                    className="input-TT"
-                    name="status"
-                    id="cars"
-                    onChange={handleAddFormChange}
-                  >
-                    <option disabled selected hidden>
-                      Chọn...
-                    </option>
-                    <option value="Full time">Full time</option>
-                    <option value="Part time">Part time</option>
-                    <option value="N/A">N/A</option>
-                  </select>
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label>Trường đại học: </label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="university"
-                    onChange={handleAddFormChange}
-                  ></input>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>Email:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="email"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label>Số điện thoại:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="telInternship"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>Dự án thực tập:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="internshipProject"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label>Thỏa thuận thực tập:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="internshipAgreementPolicy"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>Điểm bảo mật:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="securityTest"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label>Điểm Toeic:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="toeicScore"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>Ngày kiểm tra:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputStudent"
-                    style={{ width: "200px" }}
-                    type="date"
-                    name="testDate"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label>Nhận thức bảo mật:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="securityAwareness"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>Phương pháp Agile:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="pmtoolsAgileMethodology"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label style={{ width: "170px" }}>
-                    Nghi thức truyền thông:
-                  </label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="workEtiquetteProfessionalCommunication"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label style={{ width: "150px" }}>
-                    Kỹ năng thuyết trình:
-                  </label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="presentationSkills"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label>Tham dự khóa đào tạo:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="trainingAttendance"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>Bình luận:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="remark"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label>Loại PC:</label>
-                </td>
-                <td>
-                  <select
-                    className="inputText"
-                    type="text"
-                    name="pcType"
-                    onChange={handleAddFormChange}
-                  >
-                    <option disabled selected hidden>
-                                    Chọn...
-                                  </option>
-                    <option value="PC">PC</option>
-                    <option value="Laptop">Laptop</option>
-                  </select>
-                  <br></br>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>Lịch thực tập:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    style={{ width: "200px" }}
-                    type="date"
-                    name="internshipSchedule"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label>Thông tin covid:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="covidVaccinationiInformation"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-              </tr>
 
-              <tr>
-                <td>
-                  <label>Ngày chứng nhận:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputStudent"
-                    style={{ width: "200px" }}
-                    type="date"
-                    name="certificationDate"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label>Vị trí thực tập:</label>
-                </td>
-                <td>
-                  <input
-                    className="inputText"
-                    type="text"
-                    name="internshipDomain"
-                    onChange={handleAddFormChange}
-                  ></input>
-                  <br></br>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>Tên DG:</label>
-                </td>
-                <td>
-                  <select
-                    style={{ width: "200px", height: "30px" }}
-                    className="input-Student"
-                    name="idDG"
-                    onChange={(e) => {
-                      setIdDG(e.currentTarget.value);
-                    }}
-                  >
-                    <option disabled selected hidden>
-                      Chọn...
-                    </option>
-                    {dg?.map((itemDG) => (
-                      <option value={itemDG.idDG}>{itemDG.nameDG}</option>
-                    ))}
-                  </select>
-
-                  <br></br>
-                </td>
-                <td style={{ paddingLeft: "20px" }}>
-                  <label>Tên Mentor:</label>
-                </td>
-                <td>
-                  <select
-                    style={{ width: "200px", height: "30px" }}
-                    className="input-Student"
-                    name="idMentor"
-                    onChange={handleAddFormChange}
-                  >
-                    <option disabled selected hidden>
-                      Chọn...
-                    </option>
-                    {mentor?.map((itemMentor) => (
-                      <option value={itemMentor.idMentor}>
-                        {itemMentor.fullNameMentor}
-                      </option>
-                    ))}
-                  </select>
-                  <br></br>
-                </td>
-              </tr>
-              <tr></tr>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-Batch-Cancel"
-                  data-dismiss="modal"
-                  onClick={handleCancelFormSubmit}
-                >
-                  Hủy
-                </button>
-                <button
-                  onClick={handleAddFormSubmit}
-                  type="submit"
-                  className="btn btn-danger-del btn-add"
-                >
-                  Thêm
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+  const handleClose = () => {
+    props.setOpenAdd(false);
+  };
+  const title = "Thêm thực tập sinh";
+  const children = (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Typography sx={{ ml: 1, fontWeight: 600 }}>
+        Thông tin cá nhân:
+      </Typography>
+      <div>
+        <TextField
+          required
+          id="outlined-required"
+          label="Họ tên"
+          size="small"
+          defaultValue=""
+          name="fullNameInternship"
+          {...register("fullNameInternship", {
+            required: true,
+          })}
+        />
+        <TextField
+          required
+          id="outlined-required"
+          label="Số điện thoại"
+          size="small"
+          defaultValue=""
+          name="telInternship"
+          {...register("telInternship", {
+            required: true,
+          })}
+        />
+        <TextField
+          required
+          id="outlined-required"
+          label="Email"
+          size="small"
+          defaultValue=""
+          name="email"
+          {...register("email", {
+            required: true,
+          })}
+        />
       </div>
-    </div>
+      <div>
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Địa chỉ"
+          defaultValue=""
+          name="address"
+          {...register("address", {
+            required: true,
+          })}
+        />
+      </div>
+      <Typography sx={{ ml: 1, mt: 1, fontWeight: 600 }}>
+        Thông tin thực tập:
+      </Typography>
+      <div>
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Trường học"
+          defaultValue=""
+          name="university"
+          {...register("university", {
+            required: true,
+          })}
+        />
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Vị trí thực tập"
+          defaultValue=""
+          name="internshipDomain"
+          {...register("internshipDomain", {
+            required: true,
+          })}
+        />
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Trạng thái"
+          defaultValue=""
+          name="status"
+          {...register("status", {
+            required: true,
+          })}
+        />
+      </div>
+
+      <div>
+        <TextField
+          required
+          id="outlined-required"
+          label="Dự án thực tập"
+          size="small"
+          defaultValue=""
+          name="internshipProject"
+          {...register("internshipProject", {
+            required: true,
+          })}
+        />
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Thỏa thuận thực tập"
+          defaultValue=""
+          name="internshipAgreementPolicy"
+          {...register("internshipAgreementPolicy", {
+            required: true,
+          })}
+        />
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Điểm bảo mật"
+          defaultValue=""
+          name="securityTest"
+          {...register("securityTest", {
+            required: true,
+          })}
+        />
+      </div>
+      <div>
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Điểm toeic"
+          defaultValue=""
+          name="toeicScore"
+          {...register("toeicScore", {
+            required: true,
+          })}
+        />
+
+        <DesktopDatePicker
+          label="Ngày test Toeic"
+          maxDate={today}
+          inputFormat="DD/MM/YYYY"
+          value={testDate}
+          onChange={(newValue) => {
+            setTestDate(dayjs(newValue).format("MM/DD/YYYY"));
+          }}
+          renderInput={(params) => (
+            <TextField
+              required
+              id="outlined-required"
+              size="small"
+              {...params}
+            />
+          )}
+        />
+
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Nhận thức bảo mật"
+          defaultValue=""
+          name="securityAwareness"
+          {...register("securityAwareness", {
+            required: true,
+          })}
+        />
+      </div>
+      <div>
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Phương pháp Agile"
+          defaultValue=""
+          name="pmtoolsAgileMethodology"
+          {...register("pmtoolsAgileMethodology", {
+            required: true,
+          })}
+        />
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Nghi thức truyền thông"
+          defaultValue=""
+          name="workEtiquetteProfessionalCommunication"
+          {...register("workEtiquetteProfessionalCommunication", {
+            required: true,
+          })}
+        />
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Kỹ năng thuyết trình"
+          defaultValue=""
+          name="presentationSkills"
+          {...register("presentationSkills", {
+            required: true,
+          })}
+        />
+      </div>
+      <div>
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Tham gia khóa đào tạo"
+          defaultValue=""
+          name="trainingAttendance"
+          {...register("trainingAttendance", {
+            required: true,
+          })}
+        />
+        <FormControl
+          sx={{ m: 1, minWidth: 200 }}
+          size="small"
+          required
+          id="outlined-required"
+        >
+          <InputLabel htmlFor="grouped-select">Loại thực tập</InputLabel>
+          <Select
+            defaultValue=""
+            id="grouped-select"
+            label="Loại thực tập"
+            name="internshipSchedule"
+            {...register("internshipSchedule", {
+              required: true,
+            })}
+          >
+            <MenuItem value="Full time">Full time</MenuItem>;
+            <MenuItem value="Part time">Part time</MenuItem>;
+          </Select>
+        </FormControl>
+
+        <FormControl
+          sx={{ m: 1, minWidth: 200 }}
+          size="small"
+          required
+          id="outlined-required"
+        >
+          <InputLabel htmlFor="grouped-select">Loại PC</InputLabel>
+          <Select
+            defaultValue=""
+            id="grouped-select"
+            label="Loại PC"
+            name="pcType"
+            {...register("pcType", {
+              required: true,
+            })}
+          >
+            <MenuItem value="PC">PC</MenuItem>;
+            <MenuItem value="Laptop">Laptop</MenuItem>;
+          </Select>
+        </FormControl>
+      </div>
+      <div>
+        <FormControl
+          sx={{ m: 1, minWidth: 200 }}
+          size="small"
+          required
+          id="outlined-required"
+        >
+          <InputLabel htmlFor="grouped-select">Mentor</InputLabel>
+          <Select
+            defaultValue=""
+            id="grouped-select"
+            label="Mentor"
+            name="idMentor"
+            {...register("idMentor", {
+              required: true,
+            })}
+          >
+            {props.mentor?.map((item, i) => {
+              return (
+                <MenuItem key={i} value={item.idMentor}>
+                  {item.fullNameMentor}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+
+        <FormControl
+          sx={{ m: 1, minWidth: 200 }}
+          size="small"
+          required
+          id="outlined-required"
+        >
+          <InputLabel htmlFor="grouped-select">Tên DG</InputLabel>
+          <Select
+            defaultValue=""
+            id="grouped-select"
+            label="Tên DG"
+            name="idDG"
+            {...register("idDG", {
+              required: true,
+            })}
+          >
+            {props.dg?.map((item, i) => {
+              return (
+                <MenuItem key={i} value={item.idDG}>
+                  {item.nameDG}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        <FormControl
+          sx={{ m: 1, minWidth: 200 }}
+          size="small"
+          required
+          id="outlined-required"
+        >
+          <InputLabel htmlFor="grouped-select">Trạng thái thực tập</InputLabel>
+          <Select
+            defaultValue=""
+            id="grouped-select"
+            label="Trạng thái thực tập"
+            name="internshipStatus"
+            {...register("internshipStatus", {
+              required: true,
+            })}
+          >
+            <MenuItem value="Dừng thực tập">Dừng thực tập</MenuItem>;
+            <MenuItem value="Đang thực tập">Đang thực tập</MenuItem>;
+          </Select>
+        </FormControl>
+      </div>
+      <div>
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Bình luận"
+          defaultValue=""
+          name="remark"
+          {...register("remark", {
+            required: true,
+          })}
+        />
+        <TextField
+          required
+          id="outlined-required"
+          size="small"
+          label="Thông tin Covid"
+          defaultValue=""
+          name="covidVaccinationiInformation"
+          {...register("covidVaccinationiInformation", {
+            required: true,
+          })}
+        />
+
+        <DesktopDatePicker
+          label="Ngày chứng nhận"
+          maxDate={today}
+          inputFormat="DD/MM/YYYY"
+          value={certificationDate}
+          name="certificationDate"
+          onChange={(newValue) => {
+            setCertificationDate(dayjs(newValue).format("MM/DD/YYYY"));
+          }}
+          renderInput={(params) => (
+            <TextField
+              required
+              id="outlined-required"
+              size="small"
+              {...params}
+            />
+          )}
+        />
+      </div>
+    </LocalizationProvider>
+  );
+  const button = (
+    <Button variant="contained" type="submit" autoFocus>
+      Thêm
+    </Button>
+  );
+  return (
+    <ReusableDialog
+      isOpen={props.openAdd}
+      handleClose={handleClose}
+      title={title}
+      onSubmit={handleSubmit(onSubmit)}
+      children={children}
+      button={button}
+    />
   );
 }
