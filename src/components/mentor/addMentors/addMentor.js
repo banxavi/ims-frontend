@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import * as apiaxios from "../../../api/service";
 import Swal from "sweetalert2";
 import {
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -24,7 +25,6 @@ export default function AddMentor(props) {
     props.setOpenAdd(false);
   };
 
-  // onSubmit add
   const onSubmit = (value) => {
     let birthDayLast = dayjs(birthDay).format("YYYY/MM/DD");
     value.dayOfBirth = birthDayLast;
@@ -67,7 +67,6 @@ export default function AddMentor(props) {
     handleClose();
   };
   const title = "Thêm người hướng dẫn";
-  // form table add
   const children = (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div>
@@ -77,7 +76,9 @@ export default function AddMentor(props) {
           id="outlined-required"
           label="Họ tên"
           name="fullNameMentor"
-          {...register("fullNameMentor")}
+          {...register("fullNameMentor", {
+            required: true,
+          })}
         />
 
         <TextField
@@ -86,7 +87,9 @@ export default function AddMentor(props) {
           id="outlined-required"
           label="Chức vụ"
           name="position"
-          {...register("position")}
+          {...register("position", {
+            required: true,
+          })}
         />
       </div>
       <div>
@@ -115,7 +118,9 @@ export default function AddMentor(props) {
           id="outlined-required"
           label="Email"
           name="email"
-          {...register("email")}
+          {...register("email", {
+            required: true,
+          })}
         />
       </div>
       <div>
@@ -126,7 +131,9 @@ export default function AddMentor(props) {
           label="Batch"
           value={props.batchTitle.nameCoure}
           name="nameCoure"
-          {...register("nameCoure")}
+          {...register("nameCoure", {
+            required: true,
+          })}
           disabled
         />
         <FormControl
@@ -141,7 +148,9 @@ export default function AddMentor(props) {
             id="grouped-select"
             label="Tên DG"
             name="idDG"
-            {...register("idDG")}
+            {...register("idDG", {
+              required: true,
+            })}
           >
             {props.dg?.map((item, i) => {
               return (
@@ -160,7 +169,9 @@ export default function AddMentor(props) {
           id="outlined-required"
           label="Nơi công tác"
           name="workplace"
-          {...register("workplace")}
+          {...register("workplace", {
+            required: true,
+          })}
         />
         <TextField
           size="small"
@@ -168,12 +179,18 @@ export default function AddMentor(props) {
           id="outlined-required"
           label="Địa chỉ"
           name="address"
-          {...register("address")}
+          {...register("address", {
+            required: true,
+          })}
         />
       </div>
     </LocalizationProvider>
   );
-  const button = "Thêm";
+  const button = (
+    <Button variant="contained" type="submit" autoFocus>
+      Thêm
+    </Button>
+  );
   return (
     <ReusableDialog
       isOpen={props.openAdd}
