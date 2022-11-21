@@ -40,7 +40,6 @@ export default function SelectBatch() {
   const [dateEndLast, setIsDateDuplicate] = useState("");
   const [batchTitle, setBatchTile] = useState("");
   const [isCheckDate, setIsCheckDate] = useState(false);
-  
   const { register, handleSubmit } = useForm();
 
   useEffect(() => {
@@ -49,7 +48,6 @@ export default function SelectBatch() {
     });
   }, []);
 
-  console.log(posts);
   useEffect(() => {
     posts.every((item) => {
       let dateEndPrev = dayjs(item.dateEnd).format("YYYY/MM/DD");
@@ -58,6 +56,7 @@ export default function SelectBatch() {
     });
   }, [posts, dateStart]);
 
+  // add batch
   const onSubmit = (data) => {
     data.dateStart = dayjs(dateStart).format("YYYY/MM/DD");
     data.dateEnd = dayjs(dateEnd).format("YYYY/MM/DD");
@@ -99,6 +98,7 @@ export default function SelectBatch() {
         });
   };
 
+  // select batch
   const handleSelect = () => {
     try {
       if (idTemp !== "") {
