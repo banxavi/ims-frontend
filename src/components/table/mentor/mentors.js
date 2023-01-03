@@ -19,6 +19,7 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Button,
 } from "@mui/material";
 
 import TextField from "@mui/material/TextField";
@@ -151,26 +152,26 @@ export default function Mentors() {
       confirmButtonText: "Đồng ý",
       reverseButtons: true,
     })
-    .then((result) => {
-      if (result.isConfirmed) {
-        mentorService.deleteMentor(id).then((res) => {
-          dispatch(createAction(DELETE_MENTOR, res.data));
-          dispatch(getMentor());
-          fetchMentor()
-        });
-        Swal.fire({
-          icon: "success",
-          title: "Xóa thành công",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-    deleteMentor(id)
-  }
+      .then((result) => {
+        if (result.isConfirmed) {
+          mentorService.deleteMentor(id).then((res) => {
+            dispatch(createAction(DELETE_MENTOR, res.data));
+            dispatch(getMentor());
+            fetchMentor();
+          });
+          Swal.fire({
+            icon: "success",
+            title: "Xóa thành công",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    deleteMentor(id);
+  };
   useEffect(() => {
     setBirthDay(values.dayOfBirth);
   }, [values]);
@@ -270,7 +271,7 @@ export default function Mentors() {
               },
             }}
             onClick={() => {
-              handleDeleteClick(row.idMentor)
+              handleDeleteClick(row.idMentor);
             }}
           />
         </TableCell>
@@ -288,7 +289,9 @@ export default function Mentors() {
           label="Họ tên"
           defaultValue={values.fullNameMentor}
           name="fullNameMentor"
-          {...register("fullNameMentor")}
+          {...register("fullNameMentor", {
+            required: true,
+          })}
         />
         <TextField
           size="small"
@@ -297,7 +300,9 @@ export default function Mentors() {
           label="Chức vụ"
           defaultValue={values.position}
           name="position"
-          {...register("position")}
+          {...register("position", {
+            required: true,
+          })}
         />
       </div>
       <div>
@@ -329,7 +334,9 @@ export default function Mentors() {
           label="Email"
           defaultValue={values.email}
           name="email"
-          {...register("email")}
+          {...register("email", {
+            required: true,
+          })}
         ></TextField>
       </div>
       <div>
@@ -357,7 +364,9 @@ export default function Mentors() {
             id="grouped-select"
             label="Tên DG"
             name="idDG"
-            {...register("idDG")}
+            {...register("idDG", {
+              required: true,
+            })}
           >
             {dg?.map((item, i) => {
               return (
@@ -377,7 +386,9 @@ export default function Mentors() {
           label="Nơi công tác"
           defaultValue={values.workplace}
           name="workplace"
-          {...register("workplace")}
+          {...register("workplace", {
+            required: true,
+          })}
         />
         <TextField
           size="small"
@@ -386,12 +397,18 @@ export default function Mentors() {
           label="Địa chỉ"
           defaultValue={values.address}
           name="address"
-          {...register("address")}
+          {...register("address", {
+            required: true,
+          })}
         />
       </div>
     </LocalizationProvider>
   );
-  const buttonEdit = `Sửa`;
+  const buttonEdit = (
+    <Button variant="contained" type="submit" autoFocus>
+      Sửa
+    </Button>
+  );
   return (
     <>
       {/* Add mentor */}
