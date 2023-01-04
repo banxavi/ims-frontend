@@ -62,33 +62,31 @@ export default function InsertInterview(props) {
       cancelButtonText: "Hủy",
       reverseButtons: true,
       confirmButtonText: "Đồng ý",
-    }).then(
-      (result) => {
-        if (result.isConfirmed) {
-          const newContacts = [...props.resultInterview];
-          const index = props.resultInterview.findIndex(
-            (products) => products.idInternshipCourse === id
-          );
-          insertinterviewAPI(`internship/${id}`).then((res) => {});
-          updateinsertinterviewAPI(`internview/updateInsert/${id}`).then(
-            (res) => {}
-          );
-          internshipStatusUpdate(`internship/`).then((res) => {});
-          for (let i = 0; i < newContacts.length; i) {
-            newContacts.splice(index, 1);
-          }
-          props.setResultInterview(newContacts);
-          Swal.fire({
-            icon: "success",
-            title: "Thêm thành công",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        } else {
-          props.setOpenInsert(true);
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const newContacts = [...props.resultInterview];
+        const index = props.resultInterview.findIndex(
+          (products) => products.idInternshipCourse === id
+        );
+        insertinterviewAPI(`internship/${id}`).then((res) => {});
+        updateinsertinterviewAPI(`internview/updateInsert/${id}`).then(
+          (res) => {}
+        );
+        internshipStatusUpdate(`internship/`).then((res) => {});
+        for (let i = 0; i < newContacts.length; i) {
+          newContacts.splice(index, 1);
         }
-      },
-    );
+        props.setResultInterview(newContacts);
+        Swal.fire({
+          icon: "success",
+          title: "Thêm thành công",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        props.setOpenInsert(true);
+      }
+    });
   };
 
   const handleClose = () => {
@@ -179,7 +177,6 @@ export default function InsertInterview(props) {
               onClick={() => {
                 handleSubmit(idBatch);
               }}
-              autoFocus
             >
               Thêm
             </Button>

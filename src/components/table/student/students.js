@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import AddStudent from "./addStudent.js";
+import AddStudent from "./addstudent.js";
 import dayjs from "dayjs";
 import ViewStudent from "./viewStudent";
 
@@ -370,7 +370,9 @@ function Students() {
             size="small"
             defaultValue={values.fullNameInternship}
             name="fullNameInternship"
-            {...register("fullNameInternship")}
+            {...register("fullNameInternship", {
+              required: true,
+            })}
           />
           <TextField
             required
@@ -379,7 +381,9 @@ function Students() {
             size="small"
             defaultValue={values.telInternship}
             name="telInternship"
-            {...register("telInternship")}
+            {...register("telInternship", {
+              required: true,
+            })}
           />
           <TextField
             required
@@ -388,7 +392,9 @@ function Students() {
             size="small"
             defaultValue={values.email}
             name="email"
-            {...register("email")}
+            {...register("email", {
+              required: true,
+            })}
           />
         </div>
         <div>
@@ -399,7 +405,9 @@ function Students() {
             label="Địa chỉ"
             defaultValue={values.address}
             name="address"
-            {...register("address")}
+            {...register("address", {
+              required: true,
+            })}
           />
         </div>
         <Typography sx={{ ml: 1, mt: 1, fontWeight: 600 }}>
@@ -413,7 +421,9 @@ function Students() {
             label="Trường học"
             defaultValue={values.university}
             name="university"
-            {...register("university")}
+            {...register("university", {
+              required: true,
+            })}
           />
           <TextField
             required
@@ -422,7 +432,9 @@ function Students() {
             label="Vị trí thực tập"
             defaultValue={values.internshipDomain}
             name="internshipDomain"
-            {...register("internshipDomain")}
+            {...register("internshipDomain", {
+              required: true,
+            })}
           />
           <TextField
             required
@@ -431,7 +443,9 @@ function Students() {
             label="Trạng thái"
             defaultValue={values.status}
             name="status"
-            {...register("status")}
+            {...register("status", {
+              required: true,
+            })}
           />
         </div>
 
@@ -443,7 +457,9 @@ function Students() {
             size="small"
             defaultValue={values.internshipProject}
             name="internshipProject"
-            {...register("internshipProject")}
+            {...register("internshipProject", {
+              required: true,
+            })}
           />
           <TextField
             required
@@ -452,7 +468,9 @@ function Students() {
             label="Thỏa thuận thực tập"
             defaultValue={values.internshipAgreementPolicy}
             name="internshipAgreementPolicy"
-            {...register("internshipAgreementPolicy")}
+            {...register("internshipAgreementPolicy", {
+              required: true,
+            })}
           />
           <TextField
             required
@@ -461,7 +479,9 @@ function Students() {
             label="Điểm bảo mật"
             defaultValue={values.securityTest}
             name="securityTest"
-            {...register("securityTest")}
+            {...register("securityTest", {
+              required: true,
+            })}
           />
         </div>
         <div>
@@ -472,7 +492,9 @@ function Students() {
             label="Điểm toeic"
             defaultValue={values.toeicScore}
             name="toeicScore"
-            {...register("toeicScore")}
+            {...register("toeicScore", {
+              required: true,
+            })}
           />
 
           <DesktopDatePicker
@@ -500,7 +522,9 @@ function Students() {
             label="Nhận thức bảo mật"
             defaultValue={values.securityAwareness}
             name="securityAwareness"
-            {...register("securityAwareness")}
+            {...register("securityAwareness", {
+              required: true,
+            })}
           />
         </div>
         <div>
@@ -511,7 +535,9 @@ function Students() {
             label="Phương pháp Agile"
             defaultValue={values.pmtoolsAgileMethodology}
             name="pmtoolsAgileMethodology"
-            {...register("pmtoolsAgileMethodology")}
+            {...register("pmtoolsAgileMethodology", {
+              required: true,
+            })}
           />
           <TextField
             required
@@ -520,7 +546,9 @@ function Students() {
             label="Nghi thức truyền thông"
             defaultValue={values.workEtiquetteProfessionalCommunication}
             name="workEtiquetteProfessionalCommunication"
-            {...register("workEtiquetteProfessionalCommunication")}
+            {...register("workEtiquetteProfessionalCommunication", {
+              required: true,
+            })}
           />
           <TextField
             required
@@ -529,7 +557,9 @@ function Students() {
             label="Kỹ năng thuyết trình"
             defaultValue={values.presentationSkills}
             name="presentationSkills"
-            {...register("presentationSkills")}
+            {...register("presentationSkills", {
+              required: true,
+            })}
           />
         </div>
         <div>
@@ -540,7 +570,9 @@ function Students() {
             label="Tham gia khóa đào tạo"
             defaultValue={values.trainingAttendance}
             name="trainingAttendance"
-            {...register("trainingAttendance")}
+            {...register("trainingAttendance", {
+              required: true,
+            })}
           />
           <FormControl
             sx={{ m: 1, minWidth: 200 }}
@@ -593,7 +625,9 @@ function Students() {
               id="grouped-select"
               label="Mentor"
               name="idMentor"
-              {...register("idMentor")}
+              {...register("idMentor", {
+                required: true,
+              })}
             >
               {mentor?.map((item, i) => {
                 return (
@@ -642,7 +676,9 @@ function Students() {
               id="grouped-select"
               label="Trạng thái thực tập"
               name="internshipStatus"
-              {...register("internshipStatus")}
+              {...register("internshipStatus", {
+                required: true,
+              })}
             >
               <MenuItem value="Dừng thực tập">Dừng thực tập</MenuItem>;
               <MenuItem value="Đang thực tập">Đang thực tập</MenuItem>;
@@ -666,7 +702,9 @@ function Students() {
             label="Thông tin Covid"
             defaultValue={values.covidVaccinationiInformation}
             name="covidVaccinationiInformation"
-            {...register("covidVaccinationiInformation")}
+            {...register("covidVaccinationiInformation", {
+              required: true,
+            })}
           />
 
           <DesktopDatePicker
@@ -713,7 +751,11 @@ function Students() {
         button={buttonEdit}
       />
       {/* view data */}
-      <ViewStudent openView={openView} setOpenView={setOpenView} values={values} />
+      <ViewStudent
+        openView={openView}
+        setOpenView={setOpenView}
+        values={values}
+      />
       {/* Add student */}
       <AddStudent
         openAdd={openAdd}

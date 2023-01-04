@@ -531,7 +531,9 @@ function Interview() {
                     id="grouped-select"
                     label="Tên DG"
                     name="idDG"
-                    {...register("idDG")}
+                    {...register("idDG", {
+                      required: true,
+                    })}
                   >
                     {DG?.map((item, i) => {
                       return (
@@ -549,14 +551,18 @@ function Interview() {
                   size="small"
                   defaultValue={values.comments}
                   name="comments"
-                  {...register("comments")}
+                  {...register("comments", {
+                    required: true,
+                  })}
                 />
                 <TextField
                   label="Nhận xét kỹ thuật"
                   size="small"
                   defaultValue={values.technicalComments}
                   name="technicalComments"
-                  {...register("technicalComments")}
+                  {...register("technicalComments", {
+                    required: true,
+                  })}
                 />
               </div>
               <div>
@@ -565,14 +571,18 @@ function Interview() {
                   size="small"
                   defaultValue={values.technicalScore}
                   name="technicalScore"
-                  {...register("technicalScore")}
+                  {...register("technicalScore", {
+                    required: true,
+                  })}
                 />
                 <TextField
                   label="Giao tiếp Tiếng Anh"
                   size="small"
                   defaultValue={values.englishCommunication}
                   name="englishCommunication"
-                  {...register("englishCommunication")}
+                  {...register("englishCommunication", {
+                    required: true,
+                  })}
                 />
               </div>
               <div>
@@ -581,7 +591,9 @@ function Interview() {
                   size="small"
                   defaultValue={values.attitude}
                   name="attitude"
-                  {...register("attitude")}
+                  {...register("attitude", {
+                    required: true,
+                  })}
                 />
 
                 <TextField
@@ -589,7 +601,9 @@ function Interview() {
                   size="small"
                   defaultValue={values.remarks}
                   name="remarks"
-                  {...register("remarks")}
+                  {...register("remarks", {
+                    required: true,
+                  })}
                 />
               </div>
               <div>
@@ -600,7 +614,9 @@ function Interview() {
                     id="grouped-select"
                     label="Mentor"
                     name="idMentor"
-                    {...register("idMentor")}
+                    {...register("idMentor", {
+                      required: true,
+                    })}
                   >
                     {mentor?.map((item, i) => {
                       return (
@@ -618,7 +634,9 @@ function Interview() {
                     id="grouped-select"
                     label="Kết quả"
                     name="status"
-                    {...register("status")}
+                    {...register("status", {
+                      required: true,
+                    })}
                   >
                     <MenuItem value="Pass">Pass</MenuItem>
                     <MenuItem value="Fail">Fail</MenuItem>
