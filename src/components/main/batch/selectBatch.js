@@ -60,42 +60,41 @@ export default function SelectBatch() {
   const onSubmit = (data) => {
     data.dateStart = dayjs(dateStart).format("YYYY/MM/DD");
     data.dateEnd = dayjs(dateEnd).format("YYYY/MM/DD");
-    console.log(data);
-      apiaxios
-        .batchCreate("internshipcourse/create", data)
-        .then((res) => {
-          if (res) {
-            history.push(`/Home/batch/?id=${res.data.idInternshipCourse}`);
-          }
-        })
-        .catch((error) => {
-          error ? setOpen(false) : setOpen(true);
+    apiaxios
+      .batchCreate("internshipcourse/create", data)
+      .then((res) => {
+        if (res) {
+          history.push(`/Home/batch/?id=${res.data.idInternshipCourse}`);
+        }
+      })
+      .catch((error) => {
+        error ? setOpen(false) : setOpen(true);
 
-          if (error.response) {
-            Swal.fire({
-              icon: "error",
-              text: error.response.data.error,
-              confirmButtonText: "Xác nhận",
-            }).then(function (isConfirm) {
-              if (isConfirm) {
-                setOpen(true);
-              }
-            });
-          } else if (error.request) {
-            Swal.fire({
-              icon: "error",
-              text: error.request,
-              confirmButtonText: "Xác nhận",
-            });
-          } else {
-            console.log("Error", error.message);
-            Swal.fire({
-              icon: "error",
-              text: error.message,
-              confirmButtonText: "Xác nhận",
-            });
-          }
-        });
+        if (error.response) {
+          Swal.fire({
+            icon: "error",
+            text: error.response.data.error,
+            confirmButtonText: "Xác nhận",
+          }).then(function (isConfirm) {
+            if (isConfirm) {
+              setOpen(true);
+            }
+          });
+        } else if (error.request) {
+          Swal.fire({
+            icon: "error",
+            text: error.request,
+            confirmButtonText: "Xác nhận",
+          });
+        } else {
+          console.log("Error", error.message);
+          Swal.fire({
+            icon: "error",
+            text: error.message,
+            confirmButtonText: "Xác nhận",
+          });
+        }
+      });
   };
 
   // select batch
@@ -190,7 +189,13 @@ export default function SelectBatch() {
             let newData = dayjs(newValue).format("YYYY/MM/DD");
             setDateStart(newData);
             if (newData <= dateEndLast) {
-              setError(`${batchTitle} kết thúc vào ngày ${dayjs(dateEndLast).format("DD/MM/YYYY")} (vui lòng chọn sau ngày ${dayjs(dateEndLast).format("DD/MM/YYYY")})`);
+              setError(
+                `${batchTitle} kết thúc vào ngày ${dayjs(dateEndLast).format(
+                  "DD/MM/YYYY"
+                )} (vui lòng chọn sau ngày ${dayjs(dateEndLast).format(
+                  "DD/MM/YYYY"
+                )})`
+              );
               setIsCheckDate(true);
             } else {
               setIsCheckDate(false);
@@ -226,7 +231,15 @@ export default function SelectBatch() {
         />
       </div>
       <div>
-        <Typography sx={{ color: "red", textAlign: "center", m: "auto", width: "300px", wordWrap: "break-word"}}>
+        <Typography
+          sx={{
+            color: "red",
+            textAlign: "center",
+            m: "auto",
+            width: "300px",
+            wordWrap: "break-word",
+          }}
+        >
           {isCheckDate ? error : ""}
         </Typography>
       </div>

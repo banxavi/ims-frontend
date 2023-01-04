@@ -32,7 +32,6 @@ export default function MenuBar() {
   const id = useSelector((state) => state.auth.id);
 
   // login/logout
-  const isLogin = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
   const logoutHandler = () => {
     setOpenNav(null);
@@ -90,8 +89,8 @@ export default function MenuBar() {
   };
 
   return (
-    <> 
-    {/* position="static" */}
+    <>
+      {/* position="static" */}
       <AppBar>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -376,7 +375,7 @@ export default function MenuBar() {
           </Toolbar>
         </Container>
       </AppBar>
-      <Box component="div" sx={{height: "70px"}} />
+      <Box component="div" sx={{ height: "100px" }} />
     </>
   );
 }

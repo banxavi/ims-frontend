@@ -11,7 +11,7 @@ export default function Home() {
         localStorage.setItem("idBatch", urlParams.get("id"));
         setIdcourse(res.data.data);
       });
-  }, {});
+  }, []);
   return (
     <>
       <div>
