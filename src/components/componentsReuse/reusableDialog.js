@@ -33,8 +33,6 @@ function ReusableDialog({
           sx={{
             "& .MuiTextField-root": { m: 1, width: "25ch" },
           }}
-          noValidate
-          autoComplete="off"
           onSubmit={onSubmit}
         >
           <DialogContent>{children}</DialogContent>
@@ -42,9 +40,7 @@ function ReusableDialog({
             <Button variant="outlined" onClick={handleClose}>
               Hủy
             </Button>
-            <Button variant="contained" type="submit" autoFocus>
-              {button}
-            </Button>
+            {button}
           </DialogActions>
         </Box>
       </Dialog>

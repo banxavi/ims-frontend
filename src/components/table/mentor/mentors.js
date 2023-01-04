@@ -156,7 +156,6 @@ export default function Mentors() {
         if (result.isConfirmed) {
           mentorService.deleteMentor(id).then((res) => {
             dispatch(createAction(DELETE_MENTOR, res.data));
-            dispatch(getMentor());
             fetchMentor();
           });
           Swal.fire({
@@ -182,15 +181,18 @@ export default function Mentors() {
     dataMentor.dayOfBirth = birthDayLast;
     dataMentor.idInternshipCourse = values.idInternshipCourse;
     apiaxios
-      .mentorEdit(`mentor/${valuesId}`, dataMentor)
+      .mentorEdit(
+        valuesId
+          ? `mentor/${valuesId}`
+          : `mentor?idInternshipCourse=${idBatch}`,
+        dataMentor
+      )
       .then((res) => {
         const newMentor = [...mentors];
         const index = mentors.findIndex(
           (mentor) => mentor.idMentor === valuesId
         );
         newMentor[index] = dataMentor;
-        console.log(newMentor);
-        console.log(index);
         setMentor(newMentor);
         fetchMentor();
         if (res.data) {
@@ -409,6 +411,7 @@ export default function Mentors() {
       Sửa
     </Button>
   );
+
   return (
     <>
       {/* Add mentor */}
@@ -417,9 +420,9 @@ export default function Mentors() {
         setOpenAdd={setOpenAdd}
         batchTitle={batchTitle}
         dg={dg}
-        mentors={mentors}
         fetchMentor={fetchMentor}
       />
+
       {/* Display table */}
       <ReusableTable
         title={title}
