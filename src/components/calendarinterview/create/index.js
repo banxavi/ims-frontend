@@ -1,8 +1,4 @@
-import "../../../asset/css/interviewShedule.css";
-import Modal from "react-bootstrap/Modal";
-import ModalBody from "react-bootstrap/ModalBody";
-import ModalHeader from "react-bootstrap/ModalHeader";
-
+import * as React from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { popUpActions } from "../../../redux/store/popup";
@@ -10,11 +6,26 @@ import { dataAction } from "../../../redux/store/datapreview";
 import { useEffect, useState } from "react";
 import { sendEmail, saveDataInterview } from "../../../api/service";
 import Swal from "sweetalert2";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useForm } from "react-hook-form";
+import dayjs from "dayjs";
 
 const CalendarInterview = () => {
   const dispatch = useDispatch();
   const showPopUp = useSelector((state) => state.popup.showModal);
-  const hidePopUp = () => {
+  const handleClose = () => {
     dispatch(popUpActions.hide());
   };
   const showPreview = () => {
@@ -27,15 +38,15 @@ const CalendarInterview = () => {
         mentor: enterName,
         emailMentor: enterEmail,
         link: enterLink,
-        date: enterDate,
-        time: enterTime,
+        date: dayjs(enterDate).format("DD/MM/YYYY"),
+        time: dayjs(enterTime).format("HH:mm"),
         tite: title,
       })
     );
   };
 
   const dataIntern = useSelector((state) => state.popup.data);
-
+  const today = new Date();
   useEffect(() => {
     setEnterInternName(dataIntern?.fullName);
     setEnterInternEmail(dataIntern?.email);
@@ -48,14 +59,14 @@ const CalendarInterview = () => {
   const [enterInternName, setEnterInternName] = useState("");
   const [enterInternEmail, setEnterInternEmail] = useState("");
   const [id, setId] = useState("");
-  const [enterTime, setEnterTime] = useState();
-  const [enterDate, setEnterDate] = useState();
-  const addUserHandler = async (event) => {
-    event.preventDefault();
+  const [enterTime, setEnterTime] = useState(dayjs(today));
+  const [enterDate, setEnterDate] = useState(dayjs(today));
 
+  const onSubmit = async (event) => {
+    event.preventDefault();
     const saveData = {
-      interviewTime: enterTime,
-      interviewDate: enterDate,
+      interviewTime: dayjs(enterTime).format("HH:mm"),
+      interviewDate: dayjs(enterDate).format("YYYY/MM/DD"),
       interviewLink: enterLink,
       interviewer: enterName,
       emailInterviewer: enterEmail,
@@ -64,8 +75,8 @@ const CalendarInterview = () => {
       subject: title,
       interviewer: enterName,
       emailInterviewer: enterEmail,
-      interviewTime: enterTime,
-      interviewDate: enterDate,
+      interviewTime: dayjs(enterTime).format("HH:mm"),
+      interviewDate: dayjs(enterDate).format("YYYY/MM/DD"),
       interviewLink: enterLink,
       listCandidates: [
         {
@@ -77,19 +88,15 @@ const CalendarInterview = () => {
     try {
       const result = await saveDataInterview(id, saveData);
       const emailResult = await sendEmail(emailData);
-      console.log(result.status);
 
-      console.log(result.data);
-      console.log(emailResult.data);
       if (result.data) {
         Swal.fire({
-          position: "top-end",
           icon: "success",
           title: "Tạo lịch phỏng vấn thành công",
           showConfirmButton: false,
           timer: 1500,
-          style: "display:block",
         });
+        dispatch(popUpActions.hide());
         setEnterEmail("");
         setEnterName("");
         setEnterLink("");
@@ -103,7 +110,12 @@ const CalendarInterview = () => {
           icon: "error",
           text: error.response.data.error,
           confirmButtonText: "Xác nhận",
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            dispatch(popUpActions.show());
+          }
         });
+        dispatch(popUpActions.hide());
       } else if (error.request) {
         Swal.fire({
           icon: "error",
@@ -119,7 +131,7 @@ const CalendarInterview = () => {
         });
       }
     }
-  };
+   };
   const enterEmailChangeHandler = (event) => {
     setEnterEmail(event.target.value);
   };
@@ -129,154 +141,124 @@ const CalendarInterview = () => {
   const enterLinkChangHanler = (event) => {
     setEnterLink(event.target.value);
   };
-
-  const enterTimeHandler = (event) => {
-    setEnterTime(event.target.value);
+  const enterTimeHandler = (value) => {
+    setEnterTime(value);
   };
-  const enterDateHandler = (event) => {
-    setEnterDate(event.target.value);
+  const enterDateHandler = (value) => {
+    setEnterDate(value);
   };
   const enterTitleHandler = (event) => {
     setTitle(event.target.value);
   };
+
   return (
-    <Modal
-      show={showPopUp}
-      className="modal-content2"
-      contentClassName="modal-content1"
+    <Dialog
+      open={showPopUp}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      maxWidth="lg"
     >
-      <ModalHeader>
-        <div className="header_2">
-          <h5 style={{ color: "#007bff" }}>TẠO LỊCH PHỎNG VẤN</h5>
-        </div>
+      <DialogTitle id="alert-dialog-title" align="center">
+        {"Tạo lịch phỏng vấn"}
+      </DialogTitle>
+      <Box
+        component="form"
+        sx={{
+          "& .MuiTextField-root": { m: 1, width: "25ch" },
+        }}
+        noValidate
+        autoComplete="off"
+        onSubmit={onSubmit}
+      >
+        <DialogContent>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <div>
+              <TextField
+                disabled
+                label="Họ tên"
+                size="small"
+                defaultValue={enterInternName}
+              />
+              <TextField
+                disabled
+                label="Email ứng viên"
+                size="small"
+                defaultValue={enterInternEmail}
+              />
+            </div>
 
-        <div style={{ borderBottom: "0px solid" }}></div>
-      </ModalHeader>
+            <div>
+              <DesktopDatePicker
+                minDate={today}
+                label="Ngày phỏng vấn"
+                inputFormat="DD/MM/YYYY"
+                value={enterDate}
+                onChange={enterDateHandler}
+                renderInput={(params) => <TextField size="small" {...params} />}
+              />
+              <TimePicker
+                label="Time"
+                value={enterTime}
+                onChange={enterTimeHandler}
+                renderInput={(params) => <TextField size="small" {...params} />}
+              />
+            </div>
+            <div>
+              <TextField
+                required
+                type="mail"
+                id="outlined-required"
+                size="small"
+                label="Người phỏng vấn"
+                onChange={enterNameChangeHandler}
+                defaultValue={enterName}
+              />
 
-      <ModalBody>
-        <div>
-          <div className="modal-header1">
-            <form onSubmit={addUserHandler}>
-              <table>
-                <tbody>
-                  <tr>
-                    <td className="left-modal2">
-                      <label>Họ tên :</label>
-                    </td>
-                    <td>
-                      <input type="text" value={enterInternName} disabled />
-                    </td>
-                    <td className="right-modal2">
-                      <label className="lable-right">Ngày phỏng vấn :</label>
-                    </td>
-                    <td>
-                      <input
-                        type="date"
-                        style={{ width: "190px" }}
-                        onChange={enterDateHandler}
-                        value={enterDate}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="left-modal2">
-                      <label>Email ứng viên :</label>
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        placeholder="Nhập email"
-                        value={enterInternEmail}
-                        disabled
-                      />
-                    </td>
-                    <td className="right-modal2">
-                      <label className="lable-right">Giờ bắt đầu :</label>
-                    </td>
-                    <td>
-                      <input
-                        type="time"
-                        style={{ width: "190px" }}
-                        onChange={enterTimeHandler}
-                        value={enterTime}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="left-modal2">
-                      <label>Email người phỏng vấn :</label>
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        placeholder="Nhập email"
-                        onChange={enterEmailChangeHandler}
-                        value={enterEmail}
-                      />
-                    </td>
-                    <td className="right-modal2">
-                      <label className="lable-right">Người phỏng vấn :</label>
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        placeholder="Nhập họ tên..."
-                        onChange={enterNameChangeHandler}
-                        value={enterName}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="left-modal2">
-                      <label>Link phỏng vấn :</label>
-                    </td>
-                    <td>
-                      <input
-                        type="link"
-                        onChange={enterLinkChangHanler}
-                        value={enterLink}
-                        placeholder="Nhập link"
-                      />
-                    </td>
-                    <td className="right-modal2">
-                      <label className="lable-right">Tiêu đề :</label>
-                    </td>
-                    <td>
-                      <input
-                        placeholder="Nhập tiêu đề"
-                        type="text"
-                        onChange={enterTitleHandler}
-                        value={title}
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div className="taolichpvfooter">
-                <button
-                  type="button"
-                  class="btn btn-success"
-                  onClick={showPreview}
-                >
-                  Xem trước
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-light"
-                  data-dismiss="modal"
-                  onClick={hidePopUp}
-                >
-                  Hủy
-                </button>
-                <button type="submit" className="btn btn-danger-del">
-                  Gửi
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </ModalBody>
-    </Modal>
+              <TextField
+                required
+                id="outlined-required"
+                size="small"
+                label="Email người PV"
+                onChange={enterEmailChangeHandler}
+                defaultValue={enterEmail}
+              />
+            </div>
+
+            <div>
+              <TextField
+                required
+                id="outlined-required"
+                size="small"
+                label="Link phỏng vấn"
+                onChange={enterLinkChangHanler}
+                defaultValue={enterLink}
+              />
+              <TextField
+                required
+                id="outlined-required"
+                size="small"
+                label="Tiêu đề"
+                onChange={enterTitleHandler}
+                defaultValue={title}
+              />
+            </div>
+          </LocalizationProvider>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={showPreview}>
+            Xem trước
+          </Button>
+          <Button variant="outlined" onClick={handleClose}>
+            Hủy
+          </Button>
+          <Button variant="contained" type="submit">
+            Thêm
+          </Button>
+        </DialogActions>
+      </Box>
+    </Dialog>
+
   );
 };
 export default CalendarInterview;
