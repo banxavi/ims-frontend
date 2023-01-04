@@ -343,6 +343,12 @@ export default function Candidate() {
             setCandi(newContacts);
           });
         newContacts.splice(index, 1);
+        Swal.fire({
+          icon: "success",
+          title: "Xóa thành công",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     });
   };
@@ -660,7 +666,7 @@ export default function Candidate() {
         />
 
         <FormControl
-          sx={{ m: 1, minWidth: 200 }}
+          sx={{ m: 1, minWidth: 215 }}
           size="small"
           required
           id="outlined-required"
@@ -680,7 +686,7 @@ export default function Candidate() {
           </Select>
         </FormControl>
         <FormControl
-          sx={{ m: 1, minWidth: 200 }}
+          sx={{ m: 1, minWidth: 215 }}
           size="small"
           required
           id="outlined-required"
@@ -714,7 +720,7 @@ export default function Candidate() {
         />
 
         <FormControl
-          sx={{ m: 1, minWidth: 200 }}
+          sx={{ m: 1, minWidth: 215 }}
           size="small"
           required
           id="outlined-required"
@@ -816,7 +822,6 @@ export default function Candidate() {
         setOpenAdd={setOpenAdd}
         fetchCandi={fetchCandi}
         candi={candi}
-
       />
       {/* load data display */}
       <ReusableTable

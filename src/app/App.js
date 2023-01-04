@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import BasicForm from "../components/login/Form";
 import { useSelector } from "react-redux";
-// import Candidate from "../components/candidate/tableCandidate/candidate";
+import Candidate from "../components/candidate/tableCandidate/candidate";
 import Mentors from "../components/table/mentor/mentors";
 // import Students from "../components/table/student/students";
 import Home from "../components/table/home/index";
@@ -30,7 +30,7 @@ function App() {
             <MenuBar />
             <Switch>
               <Route>
-                {/* <Route path="/candidate" exact component={Candidate} /> */}
+                <Route path="/candidate" exact component={Candidate} />
                 <Route path="/mentor" exact component={Mentors} />
                 {/* <Route path="/student" exact component={Students} /> */}
                 <Route path="/home/batch" exact component={Home} />

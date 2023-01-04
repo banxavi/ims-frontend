@@ -355,7 +355,7 @@ export default function Mentors() {
           }}
         />
         <FormControl
-          sx={{ m: 1, minWidth: 200 }}
+          sx={{ m: 1, minWidth: 215 }}
           size="small"
           required
           id="outlined-required"

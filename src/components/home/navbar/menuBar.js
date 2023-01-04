@@ -375,7 +375,7 @@ export default function MenuBar() {
           </Toolbar>
         </Container>
       </AppBar>
-      <Box component="div" sx={{ height: "100px" }} />
+      <Box component="div" sx={{ height: "70px" }} />
     </>
   );
 }

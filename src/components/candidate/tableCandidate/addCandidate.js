@@ -502,7 +502,7 @@ export default function AddCandidate(props) {
         />
 
         <FormControl
-          sx={{ m: 1, minWidth: 200 }}
+          sx={{ m: 1, minWidth: 215 }}
           size="small"
           required
           id="outlined-required"
@@ -522,7 +522,7 @@ export default function AddCandidate(props) {
           </Select>
         </FormControl>
         <FormControl
-          sx={{ m: 1, minWidth: 200 }}
+          sx={{ m: 1, minWidth: 215 }}
           size="small"
           required
           id="outlined-required"
@@ -600,7 +600,7 @@ export default function AddCandidate(props) {
         />
 
         <FormControl
-          sx={{ m: 1, minWidth: 200 }}
+          sx={{ m: 1, minWidth: 215 }}
           size="small"
           required
           id="outlined-required"
