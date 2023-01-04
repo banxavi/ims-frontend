@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { deleteDg, getDg } from "../../../redux/action/dg.action";
 import * as apiaxios from "../../../api/service";
 import {
   Button,
@@ -16,7 +15,6 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 import EditIcon from "@mui/icons-material/Edit";
 import Swal from "sweetalert2";
@@ -32,7 +30,6 @@ const headCells = [
   },
 ];
 function ListDg() {
-  const dispatch = useDispatch();
   const idBatch = localStorage.getItem("idBatch");
   const [dg, setDg] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -40,9 +37,7 @@ function ListDg() {
   const [openEdit, setOpenEdit] = useState(false);
   const [valuesId, setValuesId] = useState(null);
   const { register, handleSubmit, reset } = useForm();
-  const [values, setValues] = useState({
-    nameDG: "",
-  });
+  const [values, setValues] = useState("");
 
   const fetchDG = () => {
     apiaxios.dg(`dg?idInternshipCourse=${idBatch}`, "Get", null).then((res) => {
@@ -53,7 +48,6 @@ function ListDg() {
   useEffect(() => {
     fetchDG();
   }, []);
-  console.log(dg);
 
   const onSubmitAdd = (data) => {
     apiaxios
@@ -66,7 +60,6 @@ function ListDg() {
             title: "Thêm thành công",
             showConfirmButton: false,
             timer: 1500,
-            style: "display:block",
           });
         }
         fetchDG();
@@ -98,13 +91,13 @@ function ListDg() {
   };
 
   const handleEditClick = (dg) => {
+    reset();
     setValuesId(dg.idDG);
     const formValues = {
       nameDG: dg.nameDG,
     };
     setValues(formValues);
   };
-
   const editSubmit = (data) => {
     apiaxios
       .dgEdit(`dg/${valuesId}`, data)
@@ -120,7 +113,6 @@ function ListDg() {
             title: "Sửa thành công",
             showConfirmButton: false,
             timer: 1500,
-            style: "display:block",
           });
         }
         fetchDG();
@@ -179,10 +171,13 @@ function ListDg() {
   );
   const children = (
     <TextField
+      required
       label="Tên nhóm thực tập"
       name="nameDG"
       defaultValue={values.nameDG}
-      {...register("nameDG")}
+      {...register("nameDG", {
+        required: true,
+      })}
     />
   );
   return (
