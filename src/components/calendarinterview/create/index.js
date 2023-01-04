@@ -25,6 +25,17 @@ import dayjs from "dayjs";
 const CalendarInterview = () => {
   const dispatch = useDispatch();
   const showPopUp = useSelector((state) => state.popup.showModal);
+  const [title, setTitle] = useState("");
+  const [enterEmail, setEnterEmail] = useState("");
+  const [enterName, setEnterName] = useState("");
+  const [enterLink, setEnterLink] = useState("");
+  const [enterInternName, setEnterInternName] = useState("");
+  const [enterInternEmail, setEnterInternEmail] = useState("");
+  const [id, setId] = useState("");
+  const today = new Date();
+  const [enterTime, setEnterTime] = useState(dayjs(today));
+  const [enterDate, setEnterDate] = useState(dayjs(today));
+
   const handleClose = () => {
     dispatch(popUpActions.hide());
   };
@@ -46,21 +57,11 @@ const CalendarInterview = () => {
   };
 
   const dataIntern = useSelector((state) => state.popup.data);
-  const today = new Date();
   useEffect(() => {
     setEnterInternName(dataIntern?.fullName);
     setEnterInternEmail(dataIntern?.email);
     setId(dataIntern?.id);
   }, [dataIntern]);
-  const [title, setTitle] = useState("");
-  const [enterEmail, setEnterEmail] = useState("");
-  const [enterName, setEnterName] = useState("");
-  const [enterLink, setEnterLink] = useState("");
-  const [enterInternName, setEnterInternName] = useState("");
-  const [enterInternEmail, setEnterInternEmail] = useState("");
-  const [id, setId] = useState("");
-  const [enterTime, setEnterTime] = useState(dayjs(today));
-  const [enterDate, setEnterDate] = useState(dayjs(today));
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -110,7 +111,7 @@ const CalendarInterview = () => {
           icon: "error",
           text: error.response.data.error,
           confirmButtonText: "Xác nhận",
-        }).then(function(isConfirm) {
+        }).then(function (isConfirm) {
           if (isConfirm) {
             dispatch(popUpActions.show());
           }
@@ -131,7 +132,7 @@ const CalendarInterview = () => {
         });
       }
     }
-   };
+  };
   const enterEmailChangeHandler = (event) => {
     setEnterEmail(event.target.value);
   };
@@ -258,7 +259,6 @@ const CalendarInterview = () => {
         </DialogActions>
       </Box>
     </Dialog>
-
   );
 };
 export default CalendarInterview;
