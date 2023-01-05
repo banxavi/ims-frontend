@@ -20,6 +20,7 @@ const ReusableTable = ({
   paging,
   children,
   headCells,
+  importFile,
 }) => {
   return (
     <>
@@ -40,16 +41,26 @@ const ReusableTable = ({
         </Typography>
       </Toolbar>
       <Box>
-        <Box sx={{ width: "100%", mb: 2, maxWidth: 1200, margin: "auto" }}>
+        <Box
+          sx={{
+            width: "100%",
+            mb: 2,
+            maxWidth: 1200,
+            margin: "auto",
+          }}
+        >
           {search}
-          <Button
-            variant="contained"
-            type="submit"
-            sx={{ float: "right" }}
-            onClick={handleSubmit}
-          >
-            Thêm
-          </Button>
+          <Box sx={{ display: "flex", float: "right" }}>
+            {importFile}
+            <Button
+              variant="contained"
+              type="submit"
+              sx={{ float: "right" }}
+              onClick={handleSubmit}
+            >
+              Thêm
+            </Button>
+          </Box>
         </Box>
       </Box>
       <Box sx={{ width: "100%" }}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
@@ -28,6 +28,7 @@ import {
   Typography,
   TextField,
   IconButton,
+  Box,
 } from "@mui/material";
 import AddCandidate from "./addCandidate";
 import Preview from "../../calendarinterview/review";
@@ -110,6 +111,9 @@ export default function Candidate() {
   const [openViewData, setOpenViewData] = useState(false);
   // set data total of candidate
   const [totalPage, setTotalPage] = useState(0);
+
+  // set data file
+  const [file, setFile] = useState();
 
   const dispatch = useDispatch();
   const showModal = (data) => {
@@ -486,6 +490,61 @@ export default function Candidate() {
       }}
     />
   );
+
+  const handleSubmitFile = (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileName", file.name);
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    };
+    apiaxios.UploadAPI("upload", formData, config).then((res) => {
+      setCandi();
+    });
+    // .catch((error) => {
+    //   if (error.response) {
+    //     Swal.fire({
+    //       icon: "error",
+    //       text: error.response.data.error,
+    //       confirmButtonText: "Xác nhận",
+    //     });
+    //   } else if (error.request) {
+    //     Swal.fire({
+    //       icon: "error",
+    //       text: error.request,
+    //       confirmButtonText: "Xác nhận",
+    //     });
+    //   } else {
+    //     Swal.fire({
+    //       icon: "error",
+    //       text: error.message,
+    //       confirmButtonText: "Xác nhận",
+    //     });
+    //   }
+    // })
+  };
+  const handleChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+  console.log(file);
+
+  const importFile = (
+    <Box component="form" onSubmit={handleSubmitFile}>
+      <TextField size="small" type="file" onChange={handleChange}>
+        Upload
+      </TextField>
+      <Button
+        variant="contained"
+        type="submit"
+        sx={{ height: "40px", mr: "10px" }}
+      >
+        Upload
+      </Button>
+    </Box>
+  );
   const paging = (
     <TablePagination
       rowsPerPageOptions={[5, 10, 25]}
@@ -827,6 +886,7 @@ export default function Candidate() {
       <ReusableTable
         title={title}
         search={searchName}
+        importFile={importFile}
         handleSubmit={handleOpenAdd}
         headCells={headCells}
         children={children}
