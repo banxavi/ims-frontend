@@ -35,6 +35,7 @@ import Preview from "../../calendarinterview/review";
 import ViewCandidate from "./viewCandidate";
 import ReusableTable from "../../componentsReuse/reusableTable";
 import ReusableDialog from "../../componentsReuse/reusableDialog";
+import { useRef } from "react";
 
 const headCells = [
   {
@@ -113,7 +114,7 @@ export default function Candidate() {
   const [totalPage, setTotalPage] = useState(0);
 
   // set data file
-  const [file, setFile] = useState();
+  const [file, setFile] = useState("");
 
   const dispatch = useDispatch();
   const showModal = (data) => {
@@ -502,7 +503,16 @@ export default function Candidate() {
       },
     };
     apiaxios.UploadAPI("upload", formData, config).then((res) => {
+      if (res.data) {
+        Swal.fire({
+          icon: "success",
+          title: "Import thành công",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
       setCandi();
+      fetchCandi();
     });
     // .catch((error) => {
     //   if (error.response) {
@@ -526,10 +536,10 @@ export default function Candidate() {
     //   }
     // })
   };
+
   const handleChange = (event) => {
     setFile(event.target.files[0]);
   };
-  console.log(file);
 
   const importFile = (
     <Box component="form" onSubmit={handleSubmitFile}>
