@@ -1,58 +1,47 @@
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-
 import BasicForm from "../components/login/Form";
 import { useSelector } from "react-redux";
-import "../asset/css/navbar.css";
-import "../asset/css/header.css";
-import "../asset/css/crudModal.css";
-import "../asset/css/tableCandidate.css";
-import "../asset/css/pagination.css";
-import "../asset/css/interviewShedule.css";
-import "../asset/css/mentor.css";
-import "../asset/css/interview.css";
-import "../asset/css/dg.css";
-import Navbar from "../components/home/navbar/index";
-import Header from "../components/home/header/index";
-import indexCandidate from "../components/candidate/tableCandidate/index";
-import indexMentor from "../components/table/mentor/index";
-import indexStudent from "../components/table/student/index";
+import Candidate from "../components/candidate/tableCandidate/candidate";
+import Mentors from "../components/table/mentor/mentors";
+import Students from "../components/table/student/students";
 import Home from "../components/table/home/index";
-import Batch from "../components/main/batch/index";
-import Interview from "../components/table/interview/search/index";
-import Internships from "../components/table/internships/index";
-import DG from "../components/dg/table/index";
+import Interview from "../components/table/interview/search/interview";
+import Internships from "../components/table/internships/InternShips";
+import MenuBar from "../components/home/navbar/menuBar";
+import ListDg from "../components/dg/table/listDg";
+import SelectBatch from "../components/main/batch/selectBatch";
+
 function App() {
   const isAuthen = useSelector((state) => state.auth.isAuthenticated);
-
+  const idBatch = localStorage.getItem("idBatch");
+  const home = `/home/batch/?id=${idBatch}`;
   return (
     <BrowserRouter>
       <Switch>
         <Route path="/" exact>
           {!isAuthen && <Redirect to="/login" />}
-          {isAuthen && <Redirect to="/batch" />}
+          {isAuthen && <Redirect to={home} />}
         </Route>
         <Route path="/login" exact>
           <BasicForm />
         </Route>
         {isAuthen && (
           <>
-            <Header />
-            <Navbar />
+            <MenuBar />
             <Switch>
               <Route>
-                <Route path="/candidate" exact component={indexCandidate} />
-                <Route path="/mentor" exact component={indexMentor} />
-                <Route path="/student" exact component={indexStudent} />
+                <Route path="/candidate" exact component={Candidate} />
+                <Route path="/mentor" exact component={Mentors} />
+                <Route path="/student" exact component={Students} />
                 <Route path="/home/batch" exact component={Home} />
-                <Route path="/batch" exact component={Batch} />
                 <Route path="/interview" exact component={Interview} />
                 <Route path="/internshipcourse" exact component={Internships} />
-                <Route path="/dg" exact component={DG} />
+                <Route path="/dg" exact component={ListDg} />
+                <Route path="/batch" exact component={SelectBatch} />
               </Route>
             </Switch>
           </>
         )}
-
         <Route path="*">
           <Redirect to="/login" />
         </Route>
